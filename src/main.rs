@@ -1,0 +1,173 @@
+
+
+extern crate time;
+extern crate image;
+extern crate cgmath;
+#[macro_use]
+extern crate gfx;
+extern crate gfx_window_glutin;
+extern crate tobj;
+extern crate glutin;
+
+use gfx::traits::FactoryExt;
+use gfx::{Bundle, texture, Device};
+
+use std::time::{Instant};
+
+
+use cgmath::*;
+
+
+pub type ColorFormat = gfx::format::Rgba8;
+pub type DepthFormat = gfx::format::DepthStencil;
+
+mod g_object;
+mod e_input;
+mod e_time;
+mod g_camera;
+//mod t_texture_loader;
+
+
+const CLEAR_COLOR: [f32; 4] = [0.5, 0.5, 1.0, 1.0];
+
+const PI: f32 = 3.141592653589793238;
+
+
+
+pub fn main() {
+
+    //ToBeSubclassed
+
+    //camera General
+    let mut cameraPos = Vector3::new(0.0, 0.0, 0.0);
+    let mut cameraFront = Vector3::new(0.0, 0.0, -1.0);
+    let cameraUp = Vector3::new(0.0, 1.0, 0.0);
+    //Camera Rotation
+    let mut yaw: f32 = 0.0;
+    let mut pitch: f32 = 0.0;
+
+
+    let mut last_time = Instant::now();
+    let mut delta_time = 0 as u32;
+
+
+
+
+
+    let builder = glutin::WindowBuilder::new()
+        .with_title("Triangle example".to_string())
+        .with_dimensions(1024, 768)
+        .with_vsync();
+    let (window, mut device, mut factory, mut main_color, mut main_depth) =
+        gfx_window_glutin::init::<ColorFormat, DepthFormat>(builder);
+
+    window.set_cursor_state(glutin::CursorState::Hide);
+
+    let mut win_pos_x = 0 as i32;
+    let mut win_pos_y = 0 as i32;
+
+    let mut win_size_x = 0 as i32;
+    let mut win_size_y = 0 as i32;
+
+    let win_pos = window.get_position();
+    println!("Win Pos: {:?}", win_pos);
+
+    match win_pos {
+        Some((x,y)) => {    win_pos_x = x as i32;
+                            win_pos_y = y as i32;},
+        _ => {},
+    }
+
+    let win_size = window.get_inner_size();
+    println!("Win_size: {:?}", win_size);
+
+    match win_size {
+        Some((x, y)) => {   win_size_x = x as i32;
+                            win_size_y = y as i32;},
+        _ => {},
+    }
+
+    let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
+
+
+    let test_obj_1 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
+    let test_obj_2 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
+    let test_obj_3 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
+    let test_obj_4 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
+
+
+    let mut locations: Vec<cgmath::Vector3<f32>> = Vec::new();
+    locations.push(Vector3::new(0.0, 0.0, 0.0));
+    locations.push(Vector3::new(1.0, 0.0, -2.0));
+    locations.push(Vector3::new(-3.0, 3.0, -3.0));
+    locations.push(Vector3::new(4.0, 4.0, 4.2));
+
+    let mut model_manager = Vec::new();
+
+    model_manager.push(test_obj_1);
+    model_manager.push(test_obj_2);
+    model_manager.push(test_obj_3);
+    model_manager.push(test_obj_4);
+
+
+    let mut input_handler: e_input::InputSystem = e_input::InputSystem::new();
+    let mut time_handler: e_time::Time = e_time::Time::new();
+    let mut camera: g_camera::Camera = g_camera::Camera::new();
+
+    'main: loop {
+
+        //Breaks main loop if got event from input handler
+        if input_handler.process_events(&window) {break 'main};
+
+        //Process camera/ updated all camera vectors
+        camera.calc_view(&input_handler, &mut time_handler);
+
+        let delta_time: f32 = time_handler.delta_time();
+
+        //Corrected Camera Speed
+        let camera_speed = 10.0 * delta_time;
+
+        println!("Mid: {} / {}", (win_size_x / 2), (win_size_y / 2));
+
+
+        //Input processing [extra]
+        {
+            //if C is pressed make it possible to escape the window
+            //Otherwise the curser always gets captured
+            if input_handler.keys.C == false {
+                window.set_cursor_state(glutin::CursorState::Hide);
+                let change = window.set_cursor_position((win_pos_x + (win_size_x / 2)), (win_pos_y + (win_size_y / 2)) as i32 );
+            }else {
+                window.set_cursor_state(glutin::CursorState::Normal);
+            }
+        }
+
+
+        //DO Transform
+        let proj = cgmath::perspective(cgmath::deg(45.0f32), (1024.0/768.0), 1.0, 50.0).into();
+        //Clear
+        for i in 0..model_manager.len() {
+        encoder.clear(&model_manager[i].data.out_color, CLEAR_COLOR);
+        encoder.clear_depth(&model_manager[i].data.out_depth, 1.0);
+        }
+        //Draw
+        for i in 0..model_manager.len() {
+            let locals = g_object::Locals { transform: Matrix4::from_translation(locations[i]).into(),
+                                            projection: proj,
+                                            view: camera.return_view_matrix()};
+
+            encoder.update_constant_buffer(&model_manager[i].data.locals, &locals);
+            encoder.draw(&model_manager[i].slices, &model_manager[i].pso, &model_manager[i].data);
+        }
+
+        encoder.flush(&mut device);
+        window.swap_buffers().unwrap();
+        device.cleanup();
+
+    }
+}
+
+
+fn to_radians(degree: f32) -> f32 {
+    degree * (std::f64::consts::PI / 180.0) as f32
+}

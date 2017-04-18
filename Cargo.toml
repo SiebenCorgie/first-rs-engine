@@ -1,0 +1,14 @@
+[package]
+name = "gfx_render"
+version = "0.1.0"
+authors = ["Siebencorgie <siebencorgie@googlemail.com>"]
+
+[dependencies]
+gfx = "0.14"
+glutin = "0.7"
+gfx_window_glutin = "0.14"
+cgmath = "0.7"
+image = "*"
+tobj = "0.1.2"
+time = "*"
+nalgebra = "0.11.2"
