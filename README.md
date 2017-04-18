@@ -12,7 +12,7 @@ cargo run
 This should download, compile and run the project. At the moment you'll get some cubes and a fps-camera. 
 
 
-##Goals
+## Goals
 
 - modular engine system of different mangers like "model_manager", "light_manager", "camera_manager"
 - different game objects prefixed with `g_` like cameras, objects etc.
