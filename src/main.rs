@@ -8,9 +8,9 @@ extern crate gfx;
 extern crate gfx_window_glutin;
 extern crate tobj;
 extern crate glutin;
+extern crate gfx_device_gl;
 
-use gfx::traits::FactoryExt;
-use gfx::{Bundle, texture, Device};
+use gfx::*;
 
 use std::time::{Instant};
 
@@ -25,8 +25,7 @@ mod g_object;
 mod e_input;
 mod e_time;
 mod g_camera;
-//mod t_texture_loader;
-
+mod e_model_manager;
 
 const CLEAR_COLOR: [f32; 4] = [0.5, 0.5, 1.0, 1.0];
 
@@ -102,17 +101,25 @@ pub fn main() {
     locations.push(Vector3::new(-3.0, 3.0, -3.0));
     locations.push(Vector3::new(4.0, 4.0, 4.2));
 
+    /*
     let mut model_manager = Vec::new();
 
     model_manager.push(test_obj_1);
     model_manager.push(test_obj_2);
     model_manager.push(test_obj_3);
     model_manager.push(test_obj_4);
-
+    */
 
     let mut input_handler: e_input::InputSystem = e_input::InputSystem::new();
     let mut time_handler: e_time::Time = e_time::Time::new();
     let mut camera: g_camera::Camera = g_camera::Camera::new();
+    let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
+
+    model_manager.add(String::from("Number 1"), test_obj_1);
+    model_manager.add(String::from("Number 2"), test_obj_2);
+    model_manager.add(String::from("Number 3"), test_obj_3);
+    model_manager.add(String::from("Number 4"), test_obj_4);
+
 
     'main: loop {
 
