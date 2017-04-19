@@ -57,6 +57,7 @@ pub struct Object<R: gfx::Resources> {
     pub pso: gfx::PipelineState<R, my_pipe::Meta>,
     pub data: my_pipe::Data<R>,
     pub slices: gfx::Slice<R>,
+    pub world_location: Vector3<f32>,
 }
 
 
@@ -69,6 +70,9 @@ impl<R: gfx::Resources> Object <R> {
     {
 
         //Creating everything
+        //Initial location
+        let w_loc = Vector3::new(0.0, 0.0, 0.0);
+
         //First The cube
         let vertex_data = [
                 //          LOCATION             UV              NORMAL            COLOR
@@ -152,7 +156,12 @@ impl<R: gfx::Resources> Object <R> {
                 pso: pso,
                 data: data,
                 slices: slice,
+                world_location: w_loc,
                 }
+    }
+
+    pub fn set_world_location(&mut self, new_location: Vector3<f32>) {
+        self.world_location = new_location;
     }
 
 }

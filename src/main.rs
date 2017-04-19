@@ -89,10 +89,10 @@ pub fn main() {
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
 
-    let test_obj_1 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
-    let test_obj_2 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
-    let test_obj_3 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
-    let test_obj_4 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
+    let mut test_obj_1 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
+    let mut test_obj_2 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
+    let mut test_obj_3 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
+    let mut test_obj_4 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
 
 
     let mut locations: Vec<cgmath::Vector3<f32>> = Vec::new();
@@ -100,6 +100,14 @@ pub fn main() {
     locations.push(Vector3::new(1.0, 0.0, -2.0));
     locations.push(Vector3::new(-3.0, 3.0, -3.0));
     locations.push(Vector3::new(4.0, 4.0, 4.2));
+
+
+    test_obj_1.set_world_location(locations[0]);
+    test_obj_2.set_world_location(locations[1]);
+    test_obj_3.set_world_location(locations[2]);
+    test_obj_4.set_world_location(locations[3]);
+
+
 
     /*
     let mut model_manager = Vec::new();
@@ -152,6 +160,10 @@ pub fn main() {
 
         //DO Transform
         let proj = cgmath::perspective(cgmath::deg(45.0f32), (1024.0/768.0), 1.0, 50.0).into();
+
+        model_manager.render(&mut encoder, &camera, proj);
+
+        /*
         //Clear
         for i in 0..model_manager.len() {
         encoder.clear(&model_manager[i].data.out_color, CLEAR_COLOR);
@@ -166,7 +178,7 @@ pub fn main() {
             encoder.update_constant_buffer(&model_manager[i].data.locals, &locals);
             encoder.draw(&model_manager[i].slices, &model_manager[i].pso, &model_manager[i].data);
         }
-
+        */
         encoder.flush(&mut device);
         window.swap_buffers().unwrap();
         device.cleanup();
