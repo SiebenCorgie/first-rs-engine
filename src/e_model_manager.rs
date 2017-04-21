@@ -2,6 +2,7 @@
 
 //Use HashMap for model management
 use std::collections::HashMap;
+use std::path::Path;
 
 
 use g_object;
@@ -15,7 +16,12 @@ use gfx::traits::FactoryExt;
 use gfx::{Resources, Bundle, texture, Device};
 use cgmath::*;
 
+use t_obj_importer;
+
+
 const CLEAR_COLOR: [f32; 4] = [0.5, 0.5, 1.0, 1.0];
+pub type ColorFormat = gfx::format::Rgba8;
+pub type DepthFormat = gfx::format::DepthStencil;
 
 
 
@@ -55,4 +61,22 @@ impl<R: gfx::Resources> ModelManager<R> {
         }
     }
 
+    pub fn import_model<F> (&mut self, name: &str, path: &str,
+                        factory: &mut F,
+                        main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
+                        main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,)
+        where F: gfx::Factory<R>,
+        {
+
+        let importer = t_obj_importer::Importer::new();
+        let (mesh_vec, indice_vec, name_vec) = importer.import_mesh(path);
+
+
+
+        //Add each mesh individual
+        for i in 0..mesh_vec.len(){
+            let final_name = String::from(name) + name_vec[i].as_str();
+            self.add(final_name, g_object::Object::new(factory, main_color, main_depth, mesh_vec[i].clone(), indice_vec[i].clone()));
+        }
+    }
 }

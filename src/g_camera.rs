@@ -60,9 +60,9 @@ impl Camera {
                 self.cameraPos = self.cameraPos + Vector3::new(0.0, camera_speed, 0.0);
             }
             //No Curser adjustion
-            //println!("Curser: {:?}", );
-            println!("Delta X: {}", input_handler.keys.Delta_x);
-            println!("Delta Y: {}", input_handler.keys.Delta_y);
+
+            //println!("Delta X: {}", input_handler.keys.Delta_x);
+            //println!("Delta Y: {}", input_handler.keys.Delta_y);
 
 
         }

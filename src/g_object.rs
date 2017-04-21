@@ -3,10 +3,11 @@ use cgmath;
 #[macro_use]
 use gfx;
 use gfx_window_glutin;
-use tobj;
 
 use gfx::traits::FactoryExt;
 use gfx::{Bundle, texture, Device};
+
+use t_obj_importer;
 
 use cgmath::{Point3, Vector3};
 use cgmath::{Transform, AffineMatrix3};
@@ -41,7 +42,7 @@ gfx_defines!{
 
 
 impl Vertex {
-    fn new(p: [f32; 3], t: [f32; 2], n: [f32; 3], c: [f32; 3]) -> Vertex {
+    pub fn new(p: [f32; 3], t: [f32; 2], n: [f32; 3], c: [f32; 3]) -> Vertex {
         Vertex {
             pos: [p[0], p[1] , p[2]],
             tex_coord: [t[0], t[1]],
@@ -57,6 +58,7 @@ pub struct Object<R: gfx::Resources> {
     pub pso: gfx::PipelineState<R, my_pipe::Meta>,
     pub data: my_pipe::Data<R>,
     pub slices: gfx::Slice<R>,
+    //3D Parameters
     pub world_location: Vector3<f32>,
 }
 
@@ -65,14 +67,17 @@ impl<R: gfx::Resources> Object <R> {
 
     pub fn new<F>(  factory: &mut F,
                     main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
-                    main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,) -> Self
+                    main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
+                    vertex_data: Vec<Vertex>, index_data: Vec<u32>) -> Self
     where F: gfx::Factory<R>,
     {
-
-        //Creating everything
-        //Initial location
         let w_loc = Vector3::new(0.0, 0.0, 0.0);
 
+        //let importer: t_obj_importer::Importer = t_obj_importer::Importer {};
+
+        //let (vertex_data, index_data) = importer.import_mesh(path);
+
+        /*
         //First The cube
         let vertex_data = [
                 //          LOCATION             UV              NORMAL            COLOR
@@ -117,13 +122,15 @@ impl<R: gfx::Resources> Object <R> {
                 20, 21, 22, 22, 23, 20, // back
             ];
 
+        */
+
         //Create Triangle
         let pso = factory.create_pipeline_simple(
             include_bytes!("shader/myshader_150.vs"),
             include_bytes!("shader/myshader_150.fs"),
             my_pipe::new()
         ).unwrap();
-        let (vertex_buffer, slice) = factory.create_vertex_buffer_with_slice(&vertex_data, index_data);
+        let (vertex_buffer, slice) = factory.create_vertex_buffer_with_slice(&vertex_data, index_data.as_slice());
 
         let sampler = factory.create_sampler_linear();
 
@@ -162,6 +169,10 @@ impl<R: gfx::Resources> Object <R> {
 
     pub fn set_world_location(&mut self, new_location: Vector3<f32>) {
         self.world_location = new_location;
+    }
+
+    pub fn import_mesh(&mut self, path: &str){
+
     }
 
 }

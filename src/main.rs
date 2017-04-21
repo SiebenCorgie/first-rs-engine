@@ -13,6 +13,7 @@ extern crate gfx_device_gl;
 use gfx::*;
 
 use std::time::{Instant};
+use std::path::Path;
 
 
 use cgmath::*;
@@ -26,6 +27,7 @@ mod e_input;
 mod e_time;
 mod g_camera;
 mod e_model_manager;
+mod t_obj_importer;
 
 const CLEAR_COLOR: [f32; 4] = [0.5, 0.5, 1.0, 1.0];
 
@@ -88,12 +90,11 @@ pub fn main() {
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
-
-    let mut test_obj_1 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
-    let mut test_obj_2 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
-    let mut test_obj_3 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
-    let mut test_obj_4 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth);
-
+/*
+    let mut test_obj_1 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth, "data/ape.obj");
+    let mut test_obj_2 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth, "data/ape2.obj");
+    let mut test_obj_3 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth, "data/sphere.obj");
+    let mut test_obj_4 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth, "data/torus.obj");
 
     let mut locations: Vec<cgmath::Vector3<f32>> = Vec::new();
     locations.push(Vector3::new(0.0, 0.0, 0.0));
@@ -106,28 +107,23 @@ pub fn main() {
     test_obj_2.set_world_location(locations[1]);
     test_obj_3.set_world_location(locations[2]);
     test_obj_4.set_world_location(locations[3]);
-
-
-
-    /*
-    let mut model_manager = Vec::new();
-
-    model_manager.push(test_obj_1);
-    model_manager.push(test_obj_2);
-    model_manager.push(test_obj_3);
-    model_manager.push(test_obj_4);
-    */
+*/
 
     let mut input_handler: e_input::InputSystem = e_input::InputSystem::new();
     let mut time_handler: e_time::Time = e_time::Time::new();
     let mut camera: g_camera::Camera = g_camera::Camera::new();
     let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
 
+
+    model_manager.import_model("teddy", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth);
+
+
+    /*
     model_manager.add(String::from("Number 1"), test_obj_1);
     model_manager.add(String::from("Number 2"), test_obj_2);
     model_manager.add(String::from("Number 3"), test_obj_3);
     model_manager.add(String::from("Number 4"), test_obj_4);
-
+    */
 
     'main: loop {
 
@@ -141,9 +137,6 @@ pub fn main() {
 
         //Corrected Camera Speed
         let camera_speed = 10.0 * delta_time;
-
-        println!("Mid: {} / {}", (win_size_x / 2), (win_size_y / 2));
-
 
         //Input processing [extra]
         {
@@ -163,23 +156,9 @@ pub fn main() {
 
         model_manager.render(&mut encoder, &camera, proj);
 
-        /*
-        //Clear
-        for i in 0..model_manager.len() {
-        encoder.clear(&model_manager[i].data.out_color, CLEAR_COLOR);
-        encoder.clear_depth(&model_manager[i].data.out_depth, 1.0);
-        }
-        //Draw
-        for i in 0..model_manager.len() {
-            let locals = g_object::Locals { transform: Matrix4::from_translation(locations[i]).into(),
-                                            projection: proj,
-                                            view: camera.return_view_matrix()};
-
-            encoder.update_constant_buffer(&model_manager[i].data.locals, &locals);
-            encoder.draw(&model_manager[i].slices, &model_manager[i].pso, &model_manager[i].data);
-        }
-        */
+        //Send to gpu
         encoder.flush(&mut device);
+        //Swap
         window.swap_buffers().unwrap();
         device.cleanup();
 
