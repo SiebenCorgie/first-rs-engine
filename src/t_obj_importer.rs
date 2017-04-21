@@ -26,15 +26,6 @@ impl Importer {
         println!("# of models: {}", models.len());
         println!("# of materials: {}", materials.len());
 
-        /*
-        if models.len() > 1 {
-            let fall_back = tobj::load_obj(&Path::new("data/fallback.obj"));
-            assert!(fall_back.is_ok());
-            let (models_pre, materials_pre) = fall_back.unwrap();
-            models = models_pre;
-            materials = materials_pre;
-        }
-        */
         //Push to object_vertex
         for (i, m) in models.iter().enumerate() {
 
@@ -48,10 +39,10 @@ impl Importer {
 
         	println!("model[{}].mesh.material_id = {:?}", i, mesh.material_id);
 
-        	println!("Size of model[{}].indices: {}", i, mesh.indices.len());
+        	//println!("Size of model[{}].indices: {}", i, mesh.indices.len());
         	for f in 0..mesh.indices.len() / 3 {
-        		println!("    idx[{}] = {}, {}, {}.", f, mesh.indices[3 * f],
-        			mesh.indices[3 * f + 1], mesh.indices[3 * f + 2]);
+        		//println!("    idx[{}] = {}, {}, {}.", f, mesh.indices[3 * f],
+        		//	mesh.indices[3 * f + 1], mesh.indices[3 * f + 2]);
 
                 //Write to object_indices
                 object_indices.push(mesh.indices[3 * f]);
@@ -61,13 +52,16 @@ impl Importer {
         	}
 
         	// Normals and texture coordinates are also loaded, but not printed in this example
-        	println!("model[{}].vertices: {}", i, mesh.positions.len() / 3);
+        	//println!("model[{}].vertices: {}", i, mesh.positions.len() / 3);
         	assert!(mesh.positions.len() % 3 == 0);
 
             //Create prototype_Mesh_Positions
         	for v in 0..mesh.positions.len() / 3 {
-        		println!("    v[{}] = ({}, {}, {})", v, mesh.positions[3 * v],
-        			mesh.positions[3 * v + 1], mesh.positions[3 * v + 2]);
+        	//	println!("    v[{}] = ({}, {}, {})", v, mesh.positions[3 * v],
+        	//		mesh.positions[3 * v + 1], mesh.positions[3 * v + 2]);
+
+                println!("    uv[{}] = (u: {}, v: {})", v, mesh.texcoords[v * 2],
+            		mesh.texcoords[v * 2 + 1],);
 
                 if (!mesh.normals.is_empty()) && (!mesh.texcoords.is_empty()) {
                     //Write Vertex_Struct for all vertex of this object

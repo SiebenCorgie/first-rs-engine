@@ -73,57 +73,6 @@ impl<R: gfx::Resources> Object <R> {
     {
         let w_loc = Vector3::new(0.0, 0.0, 0.0);
 
-        //let importer: t_obj_importer::Importer = t_obj_importer::Importer {};
-
-        //let (vertex_data, index_data) = importer.import_mesh(path);
-
-        /*
-        //First The cube
-        let vertex_data = [
-                //          LOCATION             UV              NORMAL            COLOR
-                // top (0, 0, 1)
-                Vertex::new([-1.0, -1.0,  1.0], [0.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0, -1.0,  1.0], [1.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0,  1.0,  1.0], [1.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0,  1.0,  1.0], [0.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                // bottom (0, 0, -1)
-                Vertex::new([-1.0,  1.0, -1.0], [1.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0,  1.0, -1.0], [0.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0, -1.0, -1.0], [0.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0, -1.0, -1.0], [1.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                // right (1, 0, 0)
-                Vertex::new([ 1.0, -1.0, -1.0], [0.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0,  1.0, -1.0], [1.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0,  1.0,  1.0], [1.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0, -1.0,  1.0], [0.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                // left (-1, 0, 0)
-                Vertex::new([-1.0, -1.0,  1.0], [1.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0,  1.0,  1.0], [0.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0,  1.0, -1.0], [0.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0, -1.0, -1.0], [1.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                // front (0, 1, 0)
-                Vertex::new([ 1.0,  1.0, -1.0], [1.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0,  1.0, -1.0], [0.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0,  1.0,  1.0], [0.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0,  1.0,  1.0], [1.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                // back (0, -1, 0)
-                Vertex::new([ 1.0, -1.0,  1.0], [0.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0, -1.0,  1.0], [1.0, 0.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([-1.0, -1.0, -1.0], [1.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-                Vertex::new([ 1.0, -1.0, -1.0], [0.0, 1.0], [-1.0, -1.0,  1.0], [1.0, 1.0, 0.0]),
-            ];
-
-            let index_data: &[u16] = &[
-                 0,  1,  2,  2,  3,  0, // top
-                 4,  5,  6,  6,  7,  4, // bottom
-                 8,  9, 10, 10, 11,  8, // right
-                12, 13, 14, 14, 15, 12, // left
-                16, 17, 18, 18, 19, 16, // front
-                20, 21, 22, 22, 23, 20, // back
-            ];
-
-        */
-
         //Create Triangle
         let pso = factory.create_pipeline_simple(
             include_bytes!("shader/myshader_150.vs"),
@@ -136,7 +85,8 @@ impl<R: gfx::Resources> Object <R> {
 
         let view = {
             use gfx::format::Rgba8;
-            let img = image::open("src/shader/test.png").unwrap().to_rgba();
+            //need to flip h, to make work with gfx-rs/opengl
+            let img = image::open("/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_Diff.png").unwrap().flipv().to_rgba();
             let (width, height) = img.dimensions();
             let kind = gfx::texture::Kind::D2(width as u16, height as u16, gfx::texture::AaMode::Single);
             let (_, view) = factory.create_texture_immutable_u8::<Rgba8>(kind, &[&img]).unwrap();

@@ -75,8 +75,14 @@ impl<R: gfx::Resources> ModelManager<R> {
 
         //Add each mesh individual
         for i in 0..mesh_vec.len(){
-            let final_name = String::from(name) + name_vec[i].as_str();
+            let final_name: String = String::from(name) + &"_" + &name_vec[i];
             self.add(final_name, g_object::Object::new(factory, main_color, main_depth, mesh_vec[i].clone(), indice_vec[i].clone()));
+        }
+    }
+
+    pub fn print_scene(&self){
+        for (name, model) in &self.models {
+            println!("Name: {}", name);
         }
     }
 }
