@@ -19,7 +19,7 @@ use cgmath::*;
 use t_obj_importer;
 
 
-const CLEAR_COLOR: [f32; 4] = [0.05, 0.05, 0.075, 1.0];
+const CLEAR_COLOR: [f32; 4] = [0.2, 0.2, 0.2, 1.0];
 pub type ColorFormat = gfx::format::Rgba8;
 pub type DepthFormat = gfx::format::DepthStencil;
 
@@ -56,13 +56,18 @@ impl<R: gfx::Resources> ModelManager<R> {
                                             projection: projection,
                                             view: camera.return_view_matrix()};
 
-            let light_info = g_object::Simple_Light {   light_pos: [10.0; 3]};
-            let camera_info = g_object::Camera {viewer_pos: camera.cameraPos.into()};
+
+
+            let light = g_object::Light {   lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
+                                            viewPos: camera.cameraPos.extend(1.0).into(),
+                                            lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
+                                            objectColor: Vector4::new(1.0, 1.0, 0.0, 1.0).into(),
+
+                                        };
 
             encoder.update_constant_buffer(&model.data.locals, &locals);
 
-            encoder.update_constant_buffer(&model.data.light, &light_info);
-            encoder.update_constant_buffer(&model.data.camera, &camera_info);
+            encoder.update_constant_buffer(&model.data.light, &light);
 
             encoder.draw(&model.slices, &model.pso, &model.data);
         }
