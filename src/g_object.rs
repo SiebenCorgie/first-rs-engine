@@ -28,11 +28,20 @@ gfx_defines!{
         view: [[f32;4];4] = "u_View",
     }
 
+    constant Camera {
+        viewer_pos: [f32; 3] = "viewPos",
+    }
+
+    constant Simple_Light {
+        light_pos: [f32; 3] = "lightPos",
+    }
+
     //Cube Pipeline
     pipeline my_pipe {
         vbuf: gfx::VertexBuffer<Vertex> = (),
-        //transform: gfx::Global<[[f32; 4]; 4]> = "u_Transform",
         locals: gfx::ConstantBuffer<Locals> = "Locals",
+        light: gfx::ConstantBuffer<Simple_Light> = "Simple_Light",
+        camera: gfx::ConstantBuffer<Camera> = "Camera",
         color: gfx::TextureSampler<[f32; 4]> = "t_Color",
         out_color: gfx::RenderTarget<ColorFormat> = "Target0",
         out_depth: gfx::DepthTarget<DepthFormat> =
@@ -86,7 +95,7 @@ impl<R: gfx::Resources> Object <R> {
         let view = {
             use gfx::format::Rgba8;
             //need to flip h, to make work with gfx-rs/opengl
-            let img = image::open("/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_Diff.png").unwrap().flipv().to_rgba();
+            let img = image::open("data/ape_tex.png").unwrap().flipv().to_rgba();
             let (width, height) = img.dimensions();
             let kind = gfx::texture::Kind::D2(width as u16, height as u16, gfx::texture::AaMode::Single);
             let (_, view) = factory.create_texture_immutable_u8::<Rgba8>(kind, &[&img]).unwrap();
@@ -101,8 +110,9 @@ impl<R: gfx::Resources> Object <R> {
 
         let mut data = my_pipe::Data {
             vbuf: vertex_buffer,
-            //transform: (proj * default_view([1.5f32, -5.0, 3.0], [0f32, 0.0, 0.0] ).mat).into(),
             locals: factory.create_constant_buffer(1),
+            camera: factory.create_constant_buffer(1),
+            light: factory.create_constant_buffer(1),
             color: (texture, sampler),
             out_color: main_color.clone(),
             out_depth: main_depth.clone(),

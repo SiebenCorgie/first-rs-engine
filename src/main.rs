@@ -116,7 +116,7 @@ pub fn main() {
 
 
     //model_manager.import_model("teddy", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth);
-    model_manager.import_model("monument", "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_OBJ.obj", &mut factory, &mut main_color, &mut main_depth);
+    model_manager.import_model("monument", "data/ape.obj", &mut factory, &mut main_color, &mut main_depth);
     model_manager.print_scene();
 
 
