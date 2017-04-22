@@ -27,21 +27,19 @@ gfx_defines!{
         projection: [[f32;4];4] = "u_Projection",
         view: [[f32;4];4] = "u_View",
     }
-
-    constant Camera {
-        viewer_pos: [f32; 3] = "viewPos",
-    }
-
-    constant Simple_Light {
-        light_pos: [f32; 3] = "lightPos",
+    constant Light {
+        lightPos: [f32; 3] = "lightPos",
+        viewPos: [f32; 3] = "viewPos",
+        lightColor: [f32; 3] = "lightColor",
+        objectColor: [f32; 3] = "objectColor",
+        _pad: f32 = "pad",
     }
 
     //Cube Pipeline
     pipeline my_pipe {
         vbuf: gfx::VertexBuffer<Vertex> = (),
         locals: gfx::ConstantBuffer<Locals> = "Locals",
-        light: gfx::ConstantBuffer<Simple_Light> = "Simple_Light",
-        camera: gfx::ConstantBuffer<Camera> = "Camera",
+        light: gfx::ConstantBuffer<Light> = "Lights",
         color: gfx::TextureSampler<[f32; 4]> = "t_Color",
         out_color: gfx::RenderTarget<ColorFormat> = "Target0",
         out_depth: gfx::DepthTarget<DepthFormat> =
@@ -111,7 +109,6 @@ impl<R: gfx::Resources> Object <R> {
         let mut data = my_pipe::Data {
             vbuf: vertex_buffer,
             locals: factory.create_constant_buffer(1),
-            camera: factory.create_constant_buffer(1),
             light: factory.create_constant_buffer(1),
             color: (texture, sampler),
             out_color: main_color.clone(),
