@@ -31,7 +31,6 @@ gfx_defines!{
         lightPos: [f32; 4] = "lightPos",
         viewPos: [f32; 4] = "viewPos",
         lightColor: [f32; 4] = "lightColor",
-        objectColor: [f32; 4] = "objectColor",
     }
 
     //Cube Pipeline

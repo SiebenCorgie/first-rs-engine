@@ -28,6 +28,10 @@ mod e_time;
 mod g_camera;
 mod e_model_manager;
 mod t_obj_importer;
+mod e_material;
+mod e_material_manager;
+mod e_light;
+mod e_lights_manager;
 
 const CLEAR_COLOR: [f32; 4] = [0.5, 0.5, 1.0, 1.0];
 
@@ -90,29 +94,19 @@ pub fn main() {
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
-/*
-    let mut test_obj_1 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth, "data/ape.obj");
-    let mut test_obj_2 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth, "data/ape2.obj");
-    let mut test_obj_3 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth, "data/sphere.obj");
-    let mut test_obj_4 = g_object::Object::new( &mut factory, &mut main_color, &mut main_depth, "data/torus.obj");
 
-    let mut locations: Vec<cgmath::Vector3<f32>> = Vec::new();
-    locations.push(Vector3::new(0.0, 0.0, 0.0));
-    locations.push(Vector3::new(1.0, 0.0, -2.0));
-    locations.push(Vector3::new(-3.0, 3.0, -3.0));
-    locations.push(Vector3::new(4.0, 4.0, 4.2));
-
-
-    test_obj_1.set_world_location(locations[0]);
-    test_obj_2.set_world_location(locations[1]);
-    test_obj_3.set_world_location(locations[2]);
-    test_obj_4.set_world_location(locations[3]);
-*/
-
+    //Init all managers
     let mut input_handler: e_input::InputSystem = e_input::InputSystem::new();
     let mut time_handler: e_time::Time = e_time::Time::new();
     let mut camera: g_camera::Camera = g_camera::Camera::new();
     let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
+    let mut material_manager: e_material_manager::MaterialManager<gfx_device_gl::Resources> = e_material_manager::MaterialManager::new();
+
+    //add a default material with some different textures
+    material_manager.add(&mut factory, "standart_material",
+                        "data/Textures/fallback_diff.png",
+                        "data/Textures/fallback_spec.png",
+                        "data/Textures/fallback_nrm.png");
 
 
     //model_manager.import_model("teddy", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth);

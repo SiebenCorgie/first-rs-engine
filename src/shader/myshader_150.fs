@@ -18,12 +18,13 @@ layout (std140) uniform Lights {
   vec4 lightPos;
   vec4 viewPos;
   vec4 lightColor;
-  vec4 objectColor;
 };
 
 
 void main() {
     // Ambient
+    vec3 objectColor = texture(t_Color, v_TexCoord).xyz;
+
     float ambientStrength = 0.1f;
     vec3 ambient = ambientStrength * lightColor.xyz;
 

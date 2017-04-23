@@ -61,8 +61,6 @@ impl<R: gfx::Resources> ModelManager<R> {
             let light = g_object::Light {   lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
                                             viewPos: camera.cameraPos.extend(1.0).into(),
                                             lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
-                                            objectColor: Vector4::new(1.0, 1.0, 0.0, 1.0).into(),
-
                                         };
 
             encoder.update_constant_buffer(&model.data.locals, &locals);
