@@ -17,7 +17,8 @@ use gfx::{Resources, Bundle, texture, Device};
 use cgmath::*;
 
 use t_obj_importer;
-
+use e_material;
+use e_material_manager;
 
 const CLEAR_COLOR: [f32; 4] = [0.2, 0.2, 0.2, 1.0];
 pub type ColorFormat = gfx::format::Rgba8;
@@ -40,8 +41,9 @@ impl<R: gfx::Resources> ModelManager<R> {
         self.models.insert(name,object);
     }
 
-    pub fn render<C>(&self, encoder: &mut gfx::Encoder<R, C> , camera: &g_camera::Camera, projection: [[f32; 4]; 4])
-    where C: gfx::CommandBuffer<R>
+    pub fn render<C>(&self, encoder: &mut gfx::Encoder<R, C> ,
+                        camera: &g_camera::Camera, projection: [[f32; 4]; 4],)
+    where   C: gfx::CommandBuffer<R>,
     {
 
         //Clean
@@ -52,6 +54,7 @@ impl<R: gfx::Resources> ModelManager<R> {
 
         //Render
         for (name, model) in &self.models {
+
             let locals = g_object::Locals { transform: Matrix4::from_translation(model.world_location).into(),
                                             projection: projection,
                                             view: camera.return_view_matrix()};
@@ -61,11 +64,18 @@ impl<R: gfx::Resources> ModelManager<R> {
             let light = g_object::Light {   lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
                                             viewPos: camera.cameraPos.extend(1.0).into(),
                                             lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
+                                            lightStrength: 1.0,
                                         };
+
+            let material = g_object::Material { shininess: model.material.shininess,
+                                                ambient: model.material.ambient,};
+
 
             encoder.update_constant_buffer(&model.data.locals, &locals);
 
             encoder.update_constant_buffer(&model.data.light, &light);
+
+            encoder.update_constant_buffer(&model.data.material, &material);
 
             encoder.draw(&model.slices, &model.pso, &model.data);
         }
@@ -74,7 +84,8 @@ impl<R: gfx::Resources> ModelManager<R> {
     pub fn import_model<F> (&mut self, name: &str, path: &str,
                         factory: &mut F,
                         main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
-                        main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,)
+                        main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
+                        mut material: &mut e_material::Material)
         where F: gfx::Factory<R>,
         {
 
@@ -83,10 +94,11 @@ impl<R: gfx::Resources> ModelManager<R> {
 
 
 
+
         //Add each mesh individual
         for i in 0..mesh_vec.len(){
             let final_name: String = String::from(name) + &"_" + &name_vec[i];
-            self.add(final_name, g_object::Object::new(factory, main_color, main_depth, mesh_vec[i].clone(), indice_vec[i].clone()));
+            self.add(final_name, g_object::Object::new(factory, main_color, main_depth, mesh_vec[i].clone(), indice_vec[i].clone(), &mut material));
         }
     }
 
@@ -95,4 +107,19 @@ impl<R: gfx::Resources> ModelManager<R> {
             println!("Name: {}", name);
         }
     }
+
+    pub fn get_model(&mut self, name: &str) -> &mut g_object::Object<R> {
+
+        let give_back = self.models.get_mut(&String::from(name));
+        //let test = give_back.unwrap().clone();
+        let result = give_back.unwrap();
+        /*
+        match test {
+            Some(x) => {println!("Loaded {} successfuly", name);},
+            _ => println!("failed to find {}", name),
+        }
+        */
+        result
+    }
+
 }

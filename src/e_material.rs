@@ -1,13 +1,13 @@
 
 use gfx;
 use image;
-
-pub struct Material<R: gfx::Resources> {
-    diffuse: gfx::handle::ShaderResourceView<R, [f32; 4]>,
-    specular: gfx::handle::ShaderResourceView<R, [f32; 4]>,
-    normal: gfx::handle::ShaderResourceView<R, [f32; 4]>,
-    ambient: f32,
-    shininess: f32,
+#[derive(Clone)]
+pub struct Material {
+    pub diffuse: String,
+    pub specular: String,
+    pub normal: String,
+    pub ambient: f32,
+    pub shininess: f32,
 }
 
 
@@ -24,31 +24,37 @@ fn gfx_load_texture<F, R>(factory: &mut F, path: &str) -> gfx::handle::ShaderRes
 }
 
 
-impl<R: gfx::Resources> Material<R>{
-    pub fn new<F>(mut factory: &mut F) -> Self
-    where F: gfx::Factory<R>
+impl Material{
+    pub fn new() -> Self
     {
-        let diffuse_map = gfx_load_texture::<F,R>(&mut factory, "data/Textures/fallback_diff.png");
-        let specular_map = gfx_load_texture::<F,R>(&mut factory, "data/Textures/fallback_spec.png");
-        let normal_map = gfx_load_texture::<F,R>(&mut factory, "data/Textures/fallback_nrm.png");
 
-        Material{ ambient: 0.1, shininess: 0.5, diffuse: diffuse_map, specular: specular_map, normal: normal_map}
+        Material{ ambient: 0.1, shininess: 32.0,
+                diffuse: String::from("data/Textures/fallback_diff.png"),
+                specular: String::from("data/Textures/fallback_spec.png"),
+                normal: String::from("data/Textures/fallback_nrm.png")}
     }
 
-    pub fn set_textures<F>(&mut self, mut factory: &mut F, diffuse_path: &str, specular_path: &str, normal_path: &str)
-    where F: gfx::Factory<R>
+    pub fn set_textures(&mut self, diffuse_path: &str, specular_path: &str, normal_path: &str)
     {
         //Set all given textures
         if diffuse_path != "_"{
-            self.diffuse = gfx_load_texture::<F,R>(&mut factory, diffuse_path);
+            self.diffuse = String::from(diffuse_path);
         }
 
         if specular_path != "_"{
-            self.specular = gfx_load_texture::<F,R>(&mut factory, specular_path);
+            self.specular = String::from(specular_path);
         }
 
         if normal_path != "_"{
-            self.normal = gfx_load_texture::<F,R>(&mut factory, normal_path);
+            self.normal = String::from(normal_path);
         }
+    }
+
+    pub fn set_shininess(&mut self, new: f32){
+        self.shininess = new;
+    }
+
+    pub fn set_ambient(&mut self, new: f32){
+        self.ambient = new;
     }
 }

@@ -100,17 +100,28 @@ pub fn main() {
     let mut time_handler: e_time::Time = e_time::Time::new();
     let mut camera: g_camera::Camera = g_camera::Camera::new();
     let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
-    let mut material_manager: e_material_manager::MaterialManager<gfx_device_gl::Resources> = e_material_manager::MaterialManager::new();
+    let mut material_manager: e_material_manager::MaterialManager = e_material_manager::MaterialManager::new();
 
     //add a default material with some different textures
-    material_manager.add(&mut factory, "standart_material",
+    material_manager.add("standart_material",
                         "data/Textures/fallback_diff.png",
                         "data/Textures/fallback_spec.png",
                         "data/Textures/fallback_nrm.png");
 
+    material_manager.add("ape_mat",
+                        "data/ape_tex.png",
+                        "data/ape_tex.png",
+                        "data/ape_tex_nrm.png");
 
-    //model_manager.import_model("teddy", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth);
-    model_manager.import_model("monument", "data/ape.obj", &mut factory, &mut main_color, &mut main_depth);
+
+    model_manager.import_model("monument", "data/cube.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
+    model_manager.import_model("ape", "data/ape.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("ape_mat"));
+
+    model_manager.import_model("sphere", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
+
+
+    model_manager.get_model("monument_Cube_Cube.001").set_world_location(Vector3::new(10.0, 10.0, 0.0));
+
     model_manager.print_scene();
 
 
@@ -136,6 +147,14 @@ pub fn main() {
                 let change = window.set_cursor_position((win_pos_x + (win_size_x / 2)), (win_pos_y + (win_size_y / 2)) as i32 );
             }else {
                 window.set_cursor_state(glutin::CursorState::Normal);
+            }
+            //if M is pressed change shininess
+            if input_handler.keys.M == true {
+                model_manager.get_model("sphere_Sphere").get_material_instance().set_ambient(0.0);
+                model_manager.get_model("sphere_Sphere").get_material_instance().set_shininess(64.0);
+            } else {
+                model_manager.get_model("sphere_Sphere").get_material_instance().set_ambient(0.1);
+                model_manager.get_model("sphere_Sphere").get_material_instance().set_shininess(32.0);
             }
         }
 

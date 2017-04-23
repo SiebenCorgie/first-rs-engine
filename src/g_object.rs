@@ -8,6 +8,7 @@ use gfx::traits::FactoryExt;
 use gfx::{Bundle, texture, Device};
 
 use t_obj_importer;
+use e_material;
 
 use cgmath::{Point3, Vector3};
 use cgmath::{Transform, AffineMatrix3};
@@ -31,6 +32,12 @@ gfx_defines!{
         lightPos: [f32; 4] = "lightPos",
         viewPos: [f32; 4] = "viewPos",
         lightColor: [f32; 4] = "lightColor",
+        lightStrength: f32 = "lightStrength",
+    }
+
+    constant Material {
+        shininess: f32 = "shininess",
+        ambient: f32 = "ambient",
     }
 
     //Cube Pipeline
@@ -38,7 +45,10 @@ gfx_defines!{
         vbuf: gfx::VertexBuffer<Vertex> = (),
         locals: gfx::ConstantBuffer<Locals> = "Locals",
         light: gfx::ConstantBuffer<Light> = "Lights",
-        color: gfx::TextureSampler<[f32; 4]> = "t_Color",
+        material: gfx::ConstantBuffer<Material> = "Material",
+        diffuse_tex: gfx::TextureSampler<[f32; 4]> = "t_Diffuse",
+        specular: gfx::TextureSampler<[f32; 4]> = "t_Specular",
+        normal: gfx::TextureSampler<[f32; 4]> = "t_Normal",
         out_color: gfx::RenderTarget<ColorFormat> = "Target0",
         out_depth: gfx::DepthTarget<DepthFormat> =
             gfx::preset::depth::LESS_EQUAL_WRITE,
@@ -59,24 +69,29 @@ impl Vertex {
 
 
 pub struct Object<R: gfx::Resources> {
-    pub name: String,
     pub pso: gfx::PipelineState<R, my_pipe::Meta>,
     pub data: my_pipe::Data<R>,
     pub slices: gfx::Slice<R>,
     //3D Parameters
     pub world_location: Vector3<f32>,
+    //Material
+    pub material: e_material::Material,
 }
 
 
 impl<R: gfx::Resources> Object <R> {
 
-    pub fn new<F>(  factory: &mut F,
+    pub fn new<F>(  mut factory: &mut F,
                     main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
                     main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
-                    vertex_data: Vec<Vertex>, index_data: Vec<u32>) -> Self
+                    vertex_data: Vec<Vertex>, index_data: Vec<u32>,
+                    material: &mut e_material::Material) -> Self
     where F: gfx::Factory<R>,
     {
         let w_loc = Vector3::new(0.0, 0.0, 0.0);
+
+        let i_material = material.clone();
+
 
         //Create Triangle
         let pso = factory.create_pipeline_simple(
@@ -88,46 +103,64 @@ impl<R: gfx::Resources> Object <R> {
 
         let sampler = factory.create_sampler_linear();
 
-        let view = {
-            use gfx::format::Rgba8;
-            //need to flip h, to make work with gfx-rs/opengl
-            let img = image::open("data/ape_tex.png").unwrap().flipv().to_rgba();
-            let (width, height) = img.dimensions();
-            let kind = gfx::texture::Kind::D2(width as u16, height as u16, gfx::texture::AaMode::Single);
-            let (_, view) = factory.create_texture_immutable_u8::<Rgba8>(kind, &[&img]).unwrap();
-            view
-        };
-
 
         //let texture = gfx_load_texture(&mut factory);
-        let texture = view;
         let proj = cgmath::perspective(cgmath::deg(45.0f32), (1024.0/768.0), 1.0, 10.0);
+
+        let diffuse_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.diffuse);
+        let specular_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.specular);
+        let normal_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.normal);
+
 
 
         let mut data = my_pipe::Data {
             vbuf: vertex_buffer,
             locals: factory.create_constant_buffer(1),
             light: factory.create_constant_buffer(1),
-            color: (texture, sampler),
+            material: factory.create_constant_buffer(1),
+            //Create data with static textures for now
+            diffuse_tex: (diffuse_texture,sampler.clone()),
+            specular: (specular_texture,sampler.clone()),
+            normal: (normal_texture,sampler.clone()),
+
             out_color: main_color.clone(),
             out_depth: main_depth.clone(),
         };
 
 
-        Object {name: String::from("Teddy"),
-                pso: pso,
+        Object {pso: pso,
                 data: data,
+                material: i_material,
                 slices: slice,
                 world_location: w_loc,
                 }
     }
 
+
+
+    //Set world locat
     pub fn set_world_location(&mut self, new_location: Vector3<f32>) {
         self.world_location = new_location;
     }
 
-    pub fn import_mesh(&mut self, path: &str){
-
+    pub fn get_material_instance(&mut self) -> &mut e_material::Material {
+        &mut self.material
     }
 
+}
+
+
+
+//texture loader based on image crate
+fn gfx_load_texture<F, R>(factory: &mut F, path: &String) -> gfx::handle::ShaderResourceView<R, [f32; 4]>
+    where F: gfx::Factory<R>,
+          R: gfx::Resources,
+{
+    use gfx::format::Rgba8;
+    //have to flip v to make work with opengl
+    let img = image::open(path.as_str()).unwrap().flipv().to_rgba();
+    let (width, height) = img.dimensions();
+    let kind = gfx::texture::Kind::D2(width as u16, height as u16, gfx::texture::AaMode::Single);
+    let (_, view) = factory.create_texture_immutable_u8::<Rgba8>(kind, &[&img]).unwrap();
+    view
 }

@@ -9,6 +9,7 @@ pub struct InputMap {
     pub E: bool,
     pub Q: bool,
     pub C: bool,
+    pub M: bool,
     pub CTRL_L: bool,
     pub SHIFT_L: bool,
 
@@ -28,6 +29,7 @@ impl InputSystem {
         //Not optimal, better would be a bool map
         let mut keys: InputMap = InputMap{  A: false, W: false, S: false, D: false,
                                             E: false, Q: false, C: false,
+                                            M: false,
                                             CTRL_L: false, SHIFT_L: false,
                                             Mouse_x: 0, Mouse_y: 0, Delta_x: 0, Delta_y: 0};
         InputSystem {keys: keys}
@@ -50,6 +52,7 @@ impl InputSystem {
                                 Some(glutin::VirtualKeyCode::E) => self.keys.E = true,
                                 Some(glutin::VirtualKeyCode::Q) => self.keys.Q = true,
                                 Some(glutin::VirtualKeyCode::C) => self.keys.C = true,
+                                Some(glutin::VirtualKeyCode::M) => self.keys.M = true,
                                 Some(glutin::VirtualKeyCode::LControl) => self.keys.CTRL_L = true,
                                 Some(glutin::VirtualKeyCode::LShift) => self.keys.SHIFT_L = true,
 
@@ -65,6 +68,7 @@ impl InputSystem {
                                 Some(glutin::VirtualKeyCode::E) => self.keys.E = false,
                                 Some(glutin::VirtualKeyCode::Q) => self.keys.Q = false,
                                 Some(glutin::VirtualKeyCode::C) => self.keys.C = false,
+                                Some(glutin::VirtualKeyCode::M) => self.keys.M = false,
                                 Some(glutin::VirtualKeyCode::LControl) => self.keys.CTRL_L = false,
                                 Some(glutin::VirtualKeyCode::LShift) => self.keys.SHIFT_L = false,
                                 _ => {},
