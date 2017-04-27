@@ -34,29 +34,11 @@ mod e_light;
 mod e_lights_manager;
 
 const CLEAR_COLOR: [f32; 4] = [0.5, 0.5, 1.0, 1.0];
-
 const PI: f32 = 3.141592653589793238;
 
 
 
 pub fn main() {
-
-    //ToBeSubclassed
-
-    //camera General
-    let mut cameraPos = Vector3::new(0.0, 0.0, 0.0);
-    let mut cameraFront = Vector3::new(0.0, 0.0, -1.0);
-    let cameraUp = Vector3::new(0.0, 1.0, 0.0);
-    //Camera Rotation
-    let mut yaw: f32 = 0.0;
-    let mut pitch: f32 = 0.0;
-
-
-    let mut last_time = Instant::now();
-    let mut delta_time = 0 as u32;
-
-
-
 
 
     let builder = glutin::WindowBuilder::new()
@@ -67,30 +49,6 @@ pub fn main() {
         gfx_window_glutin::init::<ColorFormat, DepthFormat>(builder);
 
     window.set_cursor_state(glutin::CursorState::Hide);
-
-    let mut win_pos_x = 0 as i32;
-    let mut win_pos_y = 0 as i32;
-
-    let mut win_size_x = 0 as i32;
-    let mut win_size_y = 0 as i32;
-
-    let win_pos = window.get_position();
-    println!("Win Pos: {:?}", win_pos);
-
-    match win_pos {
-        Some((x,y)) => {    win_pos_x = x as i32;
-                            win_pos_y = y as i32;},
-        _ => {},
-    }
-
-    let win_size = window.get_inner_size();
-    println!("Win_size: {:?}", win_size);
-
-    match win_size {
-        Some((x, y)) => {   win_size_x = x as i32;
-                            win_size_y = y as i32;},
-        _ => {},
-    }
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
@@ -113,11 +71,6 @@ pub fn main() {
                         "data/ape_tex.png",
                         "data/ape_tex_nrm.png");
 
-    material_manager.add("buddha",
-                        "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_Diff.png",
-                        "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_Roughness.png",
-                        "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_Roughness.png");
-
 
     model_manager.import_model("ape", "data/ape.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("ape_mat"));
 
@@ -126,6 +79,9 @@ pub fn main() {
 
 
     'main: loop {
+        //Update time / physics
+        time_handler.update();
+
 
         //Breaks main loop if got event from input handler
         if input_handler.process_events(&window) {break 'main};
@@ -140,18 +96,19 @@ pub fn main() {
 
         //Input processing [extra]
         {
-            //if C is pressed make it possible to escape the window
-            //Otherwise the curser always gets captured
-            if input_handler.keys.C == false {
-                window.set_cursor_state(glutin::CursorState::Hide);
-                let change = window.set_cursor_position((win_pos_x + (win_size_x / 2)), (win_pos_y + (win_size_y / 2)) as i32 );
-            }else {
-                window.set_cursor_state(glutin::CursorState::Normal);
-            }
             //if M is pressed change shininess
             if input_handler.keys.M == true {
-                model_manager.import_model("buddha", "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_OBJ.obj",
-                                            &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("buddha"));
+                model_manager.import_model("cube", "data/cube.obj",
+                                            &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
+            }
+            if input_handler.keys.C{
+                model_manager.print_scene();
+            }
+            if input_handler.keys.Arrow_Down & model_manager.is_in_manager("cube_Cube_Cube.001"){
+
+                let speed = 10.0 * time_handler.delta_time();
+
+                model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(0.0, -speed, 0.0));
             }
         }
 
@@ -166,6 +123,8 @@ pub fn main() {
         //Swap
         window.swap_buffers().unwrap();
         device.cleanup();
+
+        println!("FPS: {}", time_handler.delta_time());
 
     }
 }

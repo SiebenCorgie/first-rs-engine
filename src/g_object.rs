@@ -10,8 +10,7 @@ use gfx::{Bundle, texture, Device};
 use t_obj_importer;
 use e_material;
 
-use cgmath::{Point3, Vector3};
-use cgmath::{Transform, AffineMatrix3};
+use cgmath::*;
 
 pub type ColorFormat = gfx::format::Rgba8;
 pub type DepthFormat = gfx::format::DepthStencil;
@@ -74,6 +73,8 @@ pub struct Object<R: gfx::Resources> {
     pub slices: gfx::Slice<R>,
     //3D Parameters
     pub world_location: Vector3<f32>,
+    pub world_rotation: Matrix3<f32>,
+    pub world_scale: Vector3<f32>,
     //Material
     pub material: e_material::Material,
 }
@@ -89,6 +90,8 @@ impl<R: gfx::Resources> Object <R> {
     where F: gfx::Factory<R>,
     {
         let w_loc = Vector3::new(0.0, 0.0, 0.0);
+        let w_rot: Matrix3<f32> = Matrix3::from_value(0.0);
+        let w_sca = Vector3::new(0.0, 0.0, 0.0);
 
         let i_material = material.clone();
 
@@ -133,19 +136,32 @@ impl<R: gfx::Resources> Object <R> {
                 material: i_material,
                 slices: slice,
                 world_location: w_loc,
-                }
+                world_scale: w_sca,
+                world_rotation: w_rot,
+            }
     }
 
 
+//*************************************************************************************************
+//Material
+    pub fn get_material_instance(&mut self) -> &mut e_material::Material {
+        &mut self.material
+    }
 
-    //Set world locat
+//*************************************************************************************************
+//3D space
+    //Set world location
     pub fn set_world_location(&mut self, new_location: Vector3<f32>) {
         self.world_location = new_location;
     }
 
-    pub fn get_material_instance(&mut self) -> &mut e_material::Material {
-        &mut self.material
+    //Add world location
+    pub fn add_world_location(&mut self, add_ammount: Vector3<f32>) {
+        self.world_location = Vector3::new(self.world_location.x + add_ammount.x,
+                                            self.world_location.y + add_ammount.y,
+                                            self.world_location.z + add_ammount.z);
     }
+
 
 }
 

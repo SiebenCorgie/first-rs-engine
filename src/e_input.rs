@@ -13,6 +13,11 @@ pub struct InputMap {
     pub CTRL_L: bool,
     pub SHIFT_L: bool,
 
+    pub Arrow_Left: bool,
+    pub Arrow_Right: bool,
+    pub Arrow_Up: bool,
+    pub Arrow_Down: bool,
+
     pub Mouse_x: i32,
     pub Mouse_y: i32,
     pub Delta_x: i32,
@@ -26,11 +31,16 @@ pub struct InputSystem {
 
 impl InputSystem {
     pub fn new() -> Self {
+
+
+
         //Not optimal, better would be a bool map
         let mut keys: InputMap = InputMap{  A: false, W: false, S: false, D: false,
                                             E: false, Q: false, C: false,
                                             M: false,
                                             CTRL_L: false, SHIFT_L: false,
+                                            Arrow_Left: false, Arrow_Right: false, Arrow_Up: false,
+                                            Arrow_Down: false,
                                             Mouse_x: 0, Mouse_y: 0, Delta_x: 0, Delta_y: 0};
         InputSystem {keys: keys}
     }
@@ -53,6 +63,12 @@ impl InputSystem {
                                 Some(glutin::VirtualKeyCode::Q) => self.keys.Q = true,
                                 Some(glutin::VirtualKeyCode::C) => self.keys.C = true,
                                 Some(glutin::VirtualKeyCode::M) => self.keys.M = true,
+
+                                Some(glutin::VirtualKeyCode::Left) => self.keys.Arrow_Left = true,
+                                Some(glutin::VirtualKeyCode::Right) => self.keys.Arrow_Right = true,
+                                Some(glutin::VirtualKeyCode::Up) => self.keys.Arrow_Up = true,
+                                Some(glutin::VirtualKeyCode::Down) => self.keys.Arrow_Down = true,
+
                                 Some(glutin::VirtualKeyCode::LControl) => self.keys.CTRL_L = true,
                                 Some(glutin::VirtualKeyCode::LShift) => self.keys.SHIFT_L = true,
 
@@ -69,6 +85,12 @@ impl InputSystem {
                                 Some(glutin::VirtualKeyCode::Q) => self.keys.Q = false,
                                 Some(glutin::VirtualKeyCode::C) => self.keys.C = false,
                                 Some(glutin::VirtualKeyCode::M) => self.keys.M = false,
+
+                                Some(glutin::VirtualKeyCode::Left) => self.keys.Arrow_Left = false,
+                                Some(glutin::VirtualKeyCode::Right) => self.keys.Arrow_Right = false,
+                                Some(glutin::VirtualKeyCode::Up) => self.keys.Arrow_Up = false,
+                                Some(glutin::VirtualKeyCode::Down) => self.keys.Arrow_Down = false,
+
                                 Some(glutin::VirtualKeyCode::LControl) => self.keys.CTRL_L = false,
                                 Some(glutin::VirtualKeyCode::LShift) => self.keys.SHIFT_L = false,
                                 _ => {},
@@ -97,6 +119,36 @@ impl InputSystem {
                         self.keys.Delta_y = 0;},
 
             }
+        }
+
+        //Arrow capturing
+        let mut win_pos_x = 0 as i32;
+        let mut win_pos_y = 0 as i32;
+
+        let mut win_size_x = 0 as i32;
+        let mut win_size_y = 0 as i32;
+
+        let win_pos = window.get_position();
+        match win_pos {
+            Some((x,y)) => {    win_pos_x = x as i32;
+                                win_pos_y = y as i32;},
+            _ => {},
+        }
+
+        let win_size = window.get_inner_size();
+        match win_size {
+            Some((x, y)) => {   win_size_x = x as i32;
+                                win_size_y = y as i32;},
+            _ => {},
+        }
+
+        //if C is pressed make it possible to escape the window
+        //Otherwise the curser always gets captured
+        if self.keys.C == false {
+            window.set_cursor_state(glutin::CursorState::Hide);
+            let change = window.set_cursor_position((win_pos_x + (win_size_x / 2)), (win_pos_y + (win_size_y / 2)) as i32 );
+        }else {
+            window.set_cursor_state(glutin::CursorState::Normal);
         }
 
         //if everything worked return false... shouldn't close

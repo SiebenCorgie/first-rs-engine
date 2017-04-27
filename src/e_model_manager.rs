@@ -111,15 +111,20 @@ impl<R: gfx::Resources> ModelManager<R> {
     pub fn get_model(&mut self, name: &str) -> &mut g_object::Object<R> {
 
         let give_back = self.models.get_mut(&String::from(name));
-        //let test = give_back.unwrap().clone();
+        //panic if it went wrong
+        if give_back.is_none(){panic!("[{}] not found!   ", name);}
         let result = give_back.unwrap();
-        /*
-        match test {
-            Some(x) => {println!("Loaded {} successfuly", name);},
-            _ => println!("failed to find {}", name),
-        }
-        */
         result
+    }
+
+    pub fn is_in_manager(&mut self, name: &str) -> bool {
+        let give_back = self.models.get_mut(&String::from(name));
+
+        let mut result = false;
+        if give_back.is_some(){ result = true; }
+
+        result
+
     }
 
 }

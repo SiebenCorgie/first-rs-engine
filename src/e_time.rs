@@ -16,11 +16,14 @@ impl Time {
         Time {last_time: last_time, delta_time: delta_time}
     }
 
-    pub fn delta_time(&mut self) -> f32 {
+    pub fn update(&mut self){
         //std time based delta time calculation
         let current_time =  Instant::now();
         self.delta_time = self.last_time.elapsed().subsec_nanos();
         self.last_time = current_time;
+    }
+
+    pub fn delta_time(&self) -> f32 {
         self.delta_time as f32 / 1_000_000_000.0
     }
 

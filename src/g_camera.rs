@@ -15,6 +15,10 @@ pub struct Camera {
     //Camera Rotation
     yaw: f32,
     pitch: f32,
+
+    //if its the first frame, skip rotation because
+    //Arrow just got caputered
+    first_frame: bool,
 }
 
 
@@ -28,7 +32,7 @@ impl Camera {
         let yaw: f32 = 0.0;
         let pitch: f32 = 0.0;
 
-        Camera {cameraPos: cameraPos, cameraFront: cameraFront, cameraUp: cameraUp, yaw: yaw, pitch: pitch}
+        Camera {cameraPos: cameraPos, cameraFront: cameraFront, cameraUp: cameraUp, yaw: yaw, pitch: pitch, first_frame: true}
     }
 
     pub fn calc_view(&mut self, input_handler: &e_input::InputSystem, time_handler: &mut e_time::Time){
@@ -38,6 +42,7 @@ impl Camera {
 
         //Corrected Camera Speed
         let camera_speed = 10.0 * delta_time;
+        println!("{:?}", delta_time);
 
         //Input processing
         {
@@ -67,8 +72,7 @@ impl Camera {
 
         }
 
-        //Camera_Rotation
-        {
+        if self.first_frame != true {
             let mut x_offset = 0.0;
             let mut y_offset = 0.0;
 
@@ -101,6 +105,11 @@ impl Camera {
             front.y = to_radians(self.pitch).sin();
             front.z =  to_radians(self.yaw).sin() * to_radians(self.pitch).cos();
             self.cameraFront = front.normalize();
+        }
+        else{
+            //Skipping the whole roation because of the first frame
+            //Setting to false for next frames
+            self.first_frame = false;
         }
     }
 
