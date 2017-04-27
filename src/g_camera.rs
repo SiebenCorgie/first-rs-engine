@@ -42,7 +42,7 @@ impl Camera {
 
         //Corrected Camera Speed
         let camera_speed = 10.0 * delta_time;
-        println!("{:?}", delta_time);
+        //println!("{:?}", delta_time);
 
         //Input processing
         {
@@ -77,7 +77,7 @@ impl Camera {
             let mut y_offset = 0.0;
 
             //Still have to fix camera jittering :/
-            let kill_ammount = 1;
+            let kill_ammount = 2;
 
 
             let sensitivity = 0.05;

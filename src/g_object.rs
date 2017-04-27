@@ -27,11 +27,20 @@ gfx_defines!{
         projection: [[f32;4];4] = "u_Projection",
         view: [[f32;4];4] = "u_View",
     }
-    constant Light {
-        lightPos: [f32; 4] = "lightPos",
-        viewPos: [f32; 4] = "viewPos",
-        lightColor: [f32; 4] = "lightColor",
-        lightStrength: f32 = "lightStrength",
+    constant Light_Directional {
+        lightPos: [f32; 4] = "d_lightPos",
+        lightColor: [f32; 4] = "d_lightColor",
+        lightStrength: f32 = "d_lightStrength",
+    }
+    constant Light_Spot {
+        lightPos: [f32; 4] = "s_lightPos",
+    }
+    constant Light_Point {
+        lightPos: [f32; 4] = "p_lightPos",
+    }
+
+    constant Camera {
+        viewPos: [f32; 4] = "c_viewPos",
     }
 
     constant Material {
@@ -43,8 +52,15 @@ gfx_defines!{
     pipeline my_pipe {
         vbuf: gfx::VertexBuffer<Vertex> = (),
         locals: gfx::ConstantBuffer<Locals> = "Locals",
-        light: gfx::ConstantBuffer<Light> = "Lights",
+
+        dir_light: gfx::ConstantBuffer<Light_Directional> = "Light_Directional",
+        spot_light: gfx::ConstantBuffer<Light_Spot> = "Light_Spot",
+        point_light: gfx::ConstantBuffer<Light_Point> = "Light_Point",
+
         material: gfx::ConstantBuffer<Material> = "Material",
+
+        camera: gfx::ConstantBuffer<Camera> = "Camera",
+
         diffuse_tex: gfx::TextureSampler<[f32; 4]> = "t_Diffuse",
         specular: gfx::TextureSampler<[f32; 4]> = "t_Specular",
         normal: gfx::TextureSampler<[f32; 4]> = "t_Normal",
@@ -108,7 +124,7 @@ impl<R: gfx::Resources> Object <R> {
 
 
         //let texture = gfx_load_texture(&mut factory);
-        let proj = cgmath::perspective(cgmath::deg(45.0f32), (1024.0/768.0), 1.0, 10.0);
+        //let proj = cgmath::perspective(cgmath::deg(45.0f32), (1024.0/768.0), 1.0, 10.0);
 
         let diffuse_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.diffuse);
         let specular_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.specular);
@@ -119,8 +135,15 @@ impl<R: gfx::Resources> Object <R> {
         let mut data = my_pipe::Data {
             vbuf: vertex_buffer,
             locals: factory.create_constant_buffer(1),
-            light: factory.create_constant_buffer(1),
+
+            dir_light: factory.create_constant_buffer(1),
+            spot_light: factory.create_constant_buffer(1),
+            point_light: factory.create_constant_buffer(1),
+
             material: factory.create_constant_buffer(1),
+
+            camera: factory.create_constant_buffer(1),
+
             //Create data with static textures for now
             diffuse_tex: (diffuse_texture,sampler.clone()),
             specular: (specular_texture,sampler.clone()),

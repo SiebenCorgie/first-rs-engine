@@ -22,6 +22,8 @@ pub struct InputMap {
     pub Mouse_y: i32,
     pub Delta_x: i32,
     pub Delta_y: i32,
+
+
 }
 
 pub struct InputSystem {
@@ -41,7 +43,8 @@ impl InputSystem {
                                             CTRL_L: false, SHIFT_L: false,
                                             Arrow_Left: false, Arrow_Right: false, Arrow_Up: false,
                                             Arrow_Down: false,
-                                            Mouse_x: 0, Mouse_y: 0, Delta_x: 0, Delta_y: 0};
+                                            Mouse_x: 0, Mouse_y: 0, Delta_x: 0, Delta_y: 0,
+                                        };
         InputSystem {keys: keys}
     }
 
@@ -102,8 +105,10 @@ impl InputSystem {
                 //Mouse input
                 glutin::Event::MouseMoved(x_dir, y_dir) => {    self.keys.Delta_x = self.keys.Mouse_x - x_dir;
                                                                 self.keys.Delta_y = self.keys.Mouse_y - y_dir;
+
                                                                 self.keys.Mouse_x = x_dir;
-                                                                self.keys.Mouse_y = y_dir;},
+                                                                self.keys.Mouse_y = y_dir;
+                                                            },
 
                 glutin::Event::Closed => return true,
                 /*
@@ -120,6 +125,8 @@ impl InputSystem {
 
             }
         }
+
+        println!("X: {} ; Y: {}", self.keys.Delta_x, self.keys.Delta_y);
 
         //Arrow capturing
         let mut win_pos_x = 0 as i32;
@@ -146,9 +153,11 @@ impl InputSystem {
         //Otherwise the curser always gets captured
         if self.keys.C == false {
             window.set_cursor_state(glutin::CursorState::Hide);
+
             let change = window.set_cursor_position((win_pos_x + (win_size_x / 2)), (win_pos_y + (win_size_y / 2)) as i32 );
         }else {
             window.set_cursor_state(glutin::CursorState::Normal);
+
         }
 
         //if everything worked return false... shouldn't close

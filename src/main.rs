@@ -40,10 +40,11 @@ const PI: f32 = 3.141592653589793238;
 
 pub fn main() {
 
+    let (dim_x, dim_y) = (1280, 720);
 
     let builder = glutin::WindowBuilder::new()
         .with_title("Triangle example".to_string())
-        .with_dimensions(1024, 768)
+        .with_dimensions(dim_x, dim_y)
         .with_vsync();
     let (window, mut device, mut factory, mut main_color, mut main_depth) =
         gfx_window_glutin::init::<ColorFormat, DepthFormat>(builder);
@@ -107,14 +108,29 @@ pub fn main() {
             if input_handler.keys.Arrow_Down & model_manager.is_in_manager("cube_Cube_Cube.001"){
 
                 let speed = 10.0 * time_handler.delta_time();
-
                 model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(0.0, -speed, 0.0));
             }
+            if input_handler.keys.Arrow_Up & model_manager.is_in_manager("cube_Cube_Cube.001"){
+
+                let speed = 10.0 * time_handler.delta_time();
+                model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(0.0, speed, 0.0));
+            }
+            if input_handler.keys.Arrow_Left & model_manager.is_in_manager("cube_Cube_Cube.001"){
+
+                let speed = 10.0 * time_handler.delta_time();
+                model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(-speed, 0.0, 0.0));
+            }
+            if input_handler.keys.Arrow_Right & model_manager.is_in_manager("cube_Cube_Cube.001"){
+
+                let speed = 10.0 * time_handler.delta_time();
+                model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(speed, 0.0, 0.0));
+            }
+
         }
 
 
         //DO Transform
-        let proj = cgmath::perspective(cgmath::deg(45.0f32), (1024.0/768.0), 1.0, 50.0).into();
+        let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 1.0, 50.0).into();
 
         model_manager.render(&mut encoder, &camera, proj);
 
@@ -124,7 +140,7 @@ pub fn main() {
         window.swap_buffers().unwrap();
         device.cleanup();
 
-        println!("FPS: {}", time_handler.delta_time());
+        println!("FPS: {}", 1.0 /time_handler.delta_time());
 
     }
 }

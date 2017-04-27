@@ -55,27 +55,46 @@ impl<R: gfx::Resources> ModelManager<R> {
         //Render
         for (name, model) in &self.models {
 
+            //Transform
             let locals = g_object::Locals { transform: Matrix4::from_translation(model.world_location).into(),
                                             projection: projection,
-                                            view: camera.return_view_matrix()};
+                                            view: camera.return_view_matrix()
+                                        };
 
 
 
-            let light = g_object::Light {   lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
-                                            viewPos: camera.cameraPos.extend(1.0).into(),
+            //Light properties
+            let light_dir = g_object::Light_Directional {
+                                            lightPos: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
                                             lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
                                             lightStrength: 1.0,
                                         };
+            let light_spot = g_object::Light_Spot {
+                                            lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
+                                        };
 
+            let light_point = g_object::Light_Point {
+                                            lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
+                                        };
+
+
+            //Material Properties
             let material = g_object::Material { shininess: model.material.shininess,
                                                 ambient: model.material.ambient,};
+
+            //Camera
+            let camera = g_object::Camera { viewPos: camera.cameraPos.extend(1.0).into()};
 
 
             encoder.update_constant_buffer(&model.data.locals, &locals);
 
-            encoder.update_constant_buffer(&model.data.light, &light);
+            encoder.update_constant_buffer(&model.data.dir_light, &light_dir);
+            encoder.update_constant_buffer(&model.data.spot_light, &light_spot);
+            encoder.update_constant_buffer(&model.data.point_light, &light_point);
 
             encoder.update_constant_buffer(&model.data.material, &material);
+
+            encoder.update_constant_buffer(&model.data.camera, &camera);
 
             encoder.draw(&model.slices, &model.pso, &model.data);
         }
