@@ -73,7 +73,7 @@ pub fn main() {
                         "data/ape_tex_nrm.png");
 
 
-    model_manager.import_model("ape", "data/ape.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("ape_mat"));
+    model_manager.import_model("sphere", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
 
 
     model_manager.print_scene();

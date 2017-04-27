@@ -36,7 +36,12 @@ gfx_defines!{
         lightPos: [f32; 4] = "s_lightPos",
     }
     constant Light_Point {
-        lightPos: [f32; 4] = "p_lightPos",
+        l_lightPos: [f32; 4] = "p_lightPos",
+        l_lightColor: [f32; 4] = "p_lightColor",
+        l_constant: f32 = "p_constant",
+        l_linear: f32 = "p_linear",
+        l_quadratic: f32 = "p_quadratic",
+        l_lightStrength: f32 = "p_lightStrength",
     }
 
     constant Camera {

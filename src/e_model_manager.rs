@@ -20,7 +20,7 @@ use t_obj_importer;
 use e_material;
 use e_material_manager;
 
-const CLEAR_COLOR: [f32; 4] = [0.2, 0.2, 0.2, 1.0];
+const CLEAR_COLOR: [f32; 4] = [0.05, 0.05, 0.1, 1.0];
 pub type ColorFormat = gfx::format::Rgba8;
 pub type DepthFormat = gfx::format::DepthStencil;
 
@@ -74,7 +74,12 @@ impl<R: gfx::Resources> ModelManager<R> {
                                         };
 
             let light_point = g_object::Light_Point {
-                                            lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
+                                            l_lightPos: Vector4::new(2.0, 2.0, 2.0, 1.0).into(),
+                                            l_lightColor: Vector4::new(1.0, 0.95, 0.95, 1.0).into(),
+                                            l_constant: 1.0,
+                                            l_linear: 0.09,
+                                            l_quadratic: 0.032,
+                                            l_lightStrength: 1.0,
                                         };
 
 
@@ -110,9 +115,6 @@ impl<R: gfx::Resources> ModelManager<R> {
 
         let importer = t_obj_importer::Importer::new();
         let (mesh_vec, indice_vec, name_vec) = importer.import_mesh(path);
-
-
-
 
         //Add each mesh individual
         for i in 0..mesh_vec.len(){
