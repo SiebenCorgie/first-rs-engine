@@ -35,7 +35,7 @@ void main() {
     vec3 ambient = ambient * vec3(texture(t_Diffuse, v_TexCoord));
 
     // Diffuse
-    vec3 norm = normalize(Normal);
+    vec3 norm = normalize(Normal) ;
     vec3 lightDir = normalize(lightPos.xyz - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = lightColor.xyz * diff *  vec3(texture(t_Diffuse, v_TexCoord));

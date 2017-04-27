@@ -113,14 +113,14 @@ pub fn main() {
                         "data/ape_tex.png",
                         "data/ape_tex_nrm.png");
 
+    material_manager.add("buddha",
+                        "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_Diff.png",
+                        "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_Roughness.png",
+                        "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_Roughness.png");
 
-    model_manager.import_model("monument", "data/cube.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
+
     model_manager.import_model("ape", "data/ape.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("ape_mat"));
 
-    model_manager.import_model("sphere", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
-
-
-    model_manager.get_model("monument_Cube_Cube.001").set_world_location(Vector3::new(10.0, 10.0, 0.0));
 
     model_manager.print_scene();
 
@@ -150,11 +150,8 @@ pub fn main() {
             }
             //if M is pressed change shininess
             if input_handler.keys.M == true {
-                model_manager.get_model("sphere_Sphere").get_material_instance().set_ambient(0.0);
-                model_manager.get_model("sphere_Sphere").get_material_instance().set_shininess(64.0);
-            } else {
-                model_manager.get_model("sphere_Sphere").get_material_instance().set_ambient(0.1);
-                model_manager.get_model("sphere_Sphere").get_material_instance().set_shininess(32.0);
+                model_manager.import_model("buddha", "/share/Photogrammetry/_FinalModels/Journey/Small_Monuments/Buddha_White/Buddha_OBJ.obj",
+                                            &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("buddha"));
             }
         }
 
