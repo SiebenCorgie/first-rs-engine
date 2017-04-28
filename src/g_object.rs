@@ -128,9 +128,6 @@ impl<R: gfx::Resources> Object <R> {
         let sampler = factory.create_sampler_linear();
 
 
-        //let texture = gfx_load_texture(&mut factory);
-        //let proj = cgmath::perspective(cgmath::deg(45.0f32), (1024.0/768.0), 1.0, 10.0);
-
         let diffuse_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.diffuse);
         let specular_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.specular);
         let normal_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.normal);
