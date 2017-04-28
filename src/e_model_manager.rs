@@ -65,12 +65,15 @@ impl<R: gfx::Resources> ModelManager<R> {
 
             //Light properties
             let light_dir = g_object::Light_Directional {
-                                            lightPos: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
-                                            lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
-                                            lightStrength: 1.0,
+                                            d_lightDirection: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
+                                            d_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
+                                            d_lightStrength: 1.0,
                                         };
             let light_spot = g_object::Light_Spot {
-                                            lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
+                                            s_lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
+                                            s_lightDirection: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
+                                            s_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
+                                            s_cutOff: 45.0,
                                         };
 
             let light_point = g_object::Light_Point {

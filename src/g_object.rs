@@ -28,12 +28,16 @@ gfx_defines!{
         view: [[f32;4];4] = "u_View",
     }
     constant Light_Directional {
-        lightPos: [f32; 4] = "d_lightPos",
-        lightColor: [f32; 4] = "d_lightColor",
-        lightStrength: f32 = "d_lightStrength",
+        d_lightDirection: [f32; 4] = "d_lightPos",
+        d_lightColor: [f32; 4] = "d_lightColor",
+        d_lightStrength: f32 = "d_lightStrength",
     }
     constant Light_Spot {
-        lightPos: [f32; 4] = "s_lightPos",
+        s_lightPos: [f32; 4] = "s_lightPos",
+        s_lightDirection: [f32; 4] = "s_lightDirection",
+        s_lightColor: [f32; 4] = "s_lightColor",
+        s_cutOff: f32 = "s_cutOff",
+
     }
     constant Light_Point {
         l_lightPos: [f32; 4] = "p_lightPos",
