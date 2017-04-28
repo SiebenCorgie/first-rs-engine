@@ -17,3 +17,11 @@ struct LightManager {
     spot_lights: HashMap<String, e_light::Light_Spot>,
     point_lights: HashMap<String, e_light::Light_Point>,
 }
+
+
+//Create a new LightOption for passing to the Light Manager
+impl LightOptions {
+    pub fn new(max_lights: u32) -> Self {
+        LightOptions {max_lights: max_lights}
+    }
+}
