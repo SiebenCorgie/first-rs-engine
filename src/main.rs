@@ -60,6 +60,7 @@ pub fn main() {
     let mut camera: g_camera::Camera = g_camera::Camera::new();
     let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
     let mut material_manager: e_material_manager::MaterialManager = e_material_manager::MaterialManager::new();
+    let mut light_manager: e_lights_manager::LightManager = e_lights_manager::LightManager::new(2, 10, 10);
 
     //add a default material with some different textures
     material_manager.add("standart_material",
@@ -72,7 +73,15 @@ pub fn main() {
                         "data/ape_tex.png",
                         "data/ape_tex_nrm.png");
 
+    //Add some lights
+    light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
+                                        Vector3::new(1.0, 0.95, 0.95), 1.0));
+    light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(10.0, 10.0, 10.0),
+                                    Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
+    light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
+                                Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), 45.0));
 
+    //Add some models
     model_manager.import_model("sphere", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
 
 
