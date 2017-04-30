@@ -19,11 +19,7 @@ uniform Locals {
 	mat4 u_View;
 };
 
-layout (std140) uniform Light_Info {
-  int max_dir_lights;
-  int max_spot_lights;
-  int max_point_lights;
-};
+
 
 
 void main() {

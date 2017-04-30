@@ -78,6 +78,13 @@ pub fn main() {
                                         Vector3::new(1.0, 0.95, 0.95), 1.0));
     light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(10.0, 10.0, 10.0),
                                     Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
+
+    light_manager.add_point_light("Point2", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
+                                    Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
+
+    light_manager.add_point_light("Point2", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
+                                Vector3::new(0.0, 0.95, 0.95), 1.0, 0.0014, 0.000007, 1.0));
+
     light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
                                 Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), 45.0));
 
@@ -138,6 +145,9 @@ pub fn main() {
 
                 let speed = 10.0 * time_handler.delta_time();
                 model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(speed, 0.0, 0.0));
+            }
+            if input_handler.keys.Arrow_Down {
+                light_manager.get_point_light("Point").unwrap().set_position(Vector3::new(0.0, 0.0, 0.0));
             }
 
         }

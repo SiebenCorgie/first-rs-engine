@@ -34,8 +34,8 @@ gfx_defines!{
         d_lightStrength: f32 = "d_lightStrength",
         _pad1: f32 = "_pad1",
         _pad2: f32 = "_pad2",
-        _pad3: f32 = "_pad3",
         d_active: bool = "d_active",
+
     }
     constant Light_Spot {
         s_lightPos: [f32; 4] = "s_lightPos",
@@ -44,8 +44,9 @@ gfx_defines!{
         s_cutOff: f32 = "s_cutOff",
         _pad1: f32 = "_pad1",
         _pad2: f32 = "_pad2",
-        _pad3: f32 = "_pad3",
+        //_pad3: f32 = "_pad3",
         s_active: bool = "s_active",
+
     }
     constant Light_Point {
         p_lightPos: [f32; 4] = "p_lightPos",
@@ -54,6 +55,9 @@ gfx_defines!{
         p_linear: f32 = "p_linear",
         p_quadratic: f32 = "p_quadratic",
         p_lightStrength: f32 = "p_lightStrength",
+        _pad1: f32 = "_pad1",
+        _pad2: f32 = "_pad2",
+        _pad3: f32 = "_pad3",
         p_active: bool = "p_active",
     }
 

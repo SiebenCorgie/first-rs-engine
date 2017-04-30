@@ -78,28 +78,29 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 d_lightStrength: light.d_lightStrength,
                                                 _pad1: 1.0,
                                                 _pad2: 1.0,
-                                                _pad3: 1.0,
                                                 d_active: true,
+
                                             });
                 //Add active index
                 active_dir_slots += 1;
             }
-
+            /*
             //Push inactive till reaching the max lights
             for index in active_dir_slots..light_manager.light_settings.max_dir_lights {
                 current_dir_lights.push(g_object::Light_Directional {
-                                                d_lightDirection: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
+                                                d_lightDirection: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
                                                 d_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
                                                 d_lightStrength: 1.0,
                                                 _pad1: 1.0,
                                                 _pad2: 1.0,
-                                                _pad3: 1.0,
                                                 d_active: false,
+
                                             });
                 //Add deactive index
                 active_dir_slots += 1;
             }
             println!("INFO: Pushed {} of {} directional lights", active_dir_slots, light_manager.light_settings.max_dir_lights);
+            */
         }
 
         //Spot lights
@@ -113,29 +114,30 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 s_cutOff: light.s_cutOff,
                                                 _pad1: 1.0,
                                                 _pad2: 1.0,
-                                                _pad3: 1.0,
+                                                //_pad3: 1.0,
                                                 s_active: true,
                                             });
                 //Add active index
                 active_spot_slots += 1;
             }
-
+            /*
             //Push inactive till reaching the max lights
             for index in active_spot_slots..light_manager.light_settings.max_spot_lights {
                 current_spot_lights.push(g_object::Light_Spot {
-                                                s_lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
-                                                s_lightDirection: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
+                                                s_lightPos: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
+                                                s_lightDirection: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
                                                 s_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
                                                 s_cutOff: 45.0,
                                                 _pad1: 1.0,
                                                 _pad2: 1.0,
-                                                _pad3: 1.0,
+                                                //_pad3: 1.0,
                                                 s_active: false,
                                             });
                 //Add deactive index
                 active_spot_slots += 1;
             }
             println!("INFO: Pushed {} of {} spot lights", active_spot_slots, light_manager.light_settings.max_spot_lights);
+            */
         }
 
         //Point lights
@@ -149,27 +151,34 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 p_linear: light.p_linear,
                                                 p_quadratic: light.p_quadratic,
                                                 p_lightStrength: light.p_lightStrength,
+                                                _pad1: 1.0,
+                                                _pad2: 1.0,
+                                                _pad3: 1.0,
                                                 p_active: true,
                                             });
                 //Add active index
                 active_point_slots += 1;
             }
-
+            /*
             //Push inactive till reaching the max lights
             for index in active_point_slots..light_manager.light_settings.max_point_lights {
                 current_point_lights.push(g_object::Light_Point {
-                                                p_lightPos: Vector4::new(2.0, 2.0, 2.0, 1.0).into(),
-                                                p_lightColor: Vector4::new(1.0, 0.95, 0.95, 1.0).into(),
+                                                p_lightPos: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
+                                                p_lightColor: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
                                                 p_constant: 1.0,
                                                 p_linear: 0.09,
                                                 p_quadratic: 0.032,
                                                 p_lightStrength: 1.0,
+                                                _pad1: 1.0,
+                                                _pad2: 1.0,
+                                                _pad3: 1.0,
                                                 p_active: false,
                                             });
                 //Add deactive index
                 active_point_slots += 1;
             }
             println!("INFO: Pushed {} of {} point lights", active_point_slots, light_manager.light_settings.max_point_lights);
+            */
         }
 
         //Render
