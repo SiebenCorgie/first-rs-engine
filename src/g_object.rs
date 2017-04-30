@@ -29,9 +29,12 @@ gfx_defines!{
         view: [[f32;4];4] = "u_View",
     }
     constant Light_Directional {
-        d_lightDirection: [f32; 4] = "d_lightPos",
+        d_lightDirection: [f32; 4] = "d_lightDir",
         d_lightColor: [f32; 4] = "d_lightColor",
         d_lightStrength: f32 = "d_lightStrength",
+        _pad1: f32 = "_pad1",
+        _pad2: f32 = "_pad2",
+        _pad3: f32 = "_pad3",
         d_active: bool = "d_active",
     }
     constant Light_Spot {
@@ -39,6 +42,9 @@ gfx_defines!{
         s_lightDirection: [f32; 4] = "s_lightDirection",
         s_lightColor: [f32; 4] = "s_lightColor",
         s_cutOff: f32 = "s_cutOff",
+        _pad1: f32 = "_pad1",
+        _pad2: f32 = "_pad2",
+        _pad3: f32 = "_pad3",
         s_active: bool = "s_active",
     }
     constant Light_Point {
@@ -155,9 +161,10 @@ impl<R: gfx::Resources> Object <R> {
             locals: factory.create_constant_buffer(1),
 
             //Create light buffers according to the light settings
-            dir_light: factory.create_constant_buffer(light_manager.light_settings.max_dir_lights as usize),
-            spot_light: factory.create_constant_buffer(light_manager.light_settings.max_spot_lights as usize),
-            point_light: factory.create_constant_buffer(light_manager.light_settings.max_point_lights as usize),
+
+            dir_light: factory.create_buffer(light_manager.light_settings.max_dir_lights as usize, buffer::Role::Constant, memory::Usage::Dynamic, Bind::all()).unwrap(),
+            spot_light: factory.create_buffer(light_manager.light_settings.max_spot_lights as usize, buffer::Role::Constant, memory::Usage::Dynamic, Bind::all()).unwrap(),
+            point_light: factory.create_buffer(light_manager.light_settings.max_point_lights as usize, buffer::Role::Constant, memory::Usage::Dynamic, Bind::all()).unwrap(),
 
             //Create the light info for this object
             light_info: factory.create_constant_buffer(1),

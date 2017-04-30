@@ -23,8 +23,8 @@ impl Importer {
         assert!(object.is_ok());
         let (mut models, mut materials) = object.unwrap();
 
-        println!("# of models: {}", models.len());
-        println!("# of materials: {}", materials.len());
+        //println!("# of models: {}", models.len());
+        //println!("# of materials: {}", materials.len());
 
         //Push to object_vertex
         for (i, m) in models.iter().enumerate() {
@@ -33,11 +33,11 @@ impl Importer {
             let mut object_indices: Vec<u32> = Vec::new();
 
             let mesh = &m.mesh;
-        	println!("model[{}].name = \'{}\'", i, m.name);
+        	//println!("model[{}].name = \'{}\'", i, m.name);
             //Give to name pile
             object_name.push(String::from(m.name.clone()));
 
-        	println!("model[{}].mesh.material_id = {:?}", i, mesh.material_id);
+            //println!("model[{}].mesh.material_id = {:?}", i, mesh.material_id);
 
         	//println!("Size of model[{}].indices: {}", i, mesh.indices.len());
         	for f in 0..mesh.indices.len() / 3 {
@@ -60,8 +60,8 @@ impl Importer {
         	//	println!("    v[{}] = ({}, {}, {})", v, mesh.positions[3 * v],
         	//		mesh.positions[3 * v + 1], mesh.positions[3 * v + 2]);
 
-                println!("    uv[{}] = (u: {}, v: {})", v, mesh.texcoords[v * 2],
-            		mesh.texcoords[v * 2 + 1],);
+                //println!("    uv[{}] = (u: {}, v: {})", v, mesh.texcoords[v * 2],
+            	//	mesh.texcoords[v * 2 + 1],);
 
                 if (!mesh.normals.is_empty()) && (!mesh.texcoords.is_empty()) {
                     //Write Vertex_Struct for all vertex of this object
@@ -87,7 +87,7 @@ impl Importer {
             index_pile.push(object_indices);
         }
 
-
+        /*
         //Maybe later :)
         for (i, m) in materials.iter().enumerate() {
         	println!("material[{}].name = \'{}\'", i, m.name);
@@ -108,6 +108,7 @@ impl Importer {
         		println!("    material.{} = {}", k, v);
         	}
         }
+        */
         (object_pile, index_pile, object_name)
     }
 }

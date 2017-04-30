@@ -76,6 +76,9 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 d_lightDirection: light.d_lightDirection ,
                                                 d_lightColor: light.d_lightColor,
                                                 d_lightStrength: light.d_lightStrength,
+                                                _pad1: 1.0,
+                                                _pad2: 1.0,
+                                                _pad3: 1.0,
                                                 d_active: true,
                                             });
                 //Add active index
@@ -88,6 +91,9 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 d_lightDirection: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
                                                 d_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
                                                 d_lightStrength: 1.0,
+                                                _pad1: 1.0,
+                                                _pad2: 1.0,
+                                                _pad3: 1.0,
                                                 d_active: false,
                                             });
                 //Add deactive index
@@ -105,6 +111,9 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 s_lightDirection: light.s_lightDirection,
                                                 s_lightColor: light.s_lightColor,
                                                 s_cutOff: light.s_cutOff,
+                                                _pad1: 1.0,
+                                                _pad2: 1.0,
+                                                _pad3: 1.0,
                                                 s_active: true,
                                             });
                 //Add active index
@@ -118,6 +127,9 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 s_lightDirection: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
                                                 s_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
                                                 s_cutOff: 45.0,
+                                                _pad1: 1.0,
+                                                _pad2: 1.0,
+                                                _pad3: 1.0,
                                                 s_active: false,
                                             });
                 //Add deactive index
@@ -174,30 +186,7 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                         max_point_lights: light_manager.light_settings.max_point_lights as i32};
 
 
-
-            /*Light properties
-            let light_dir = g_object::Light_Directional {
-                                            d_lightDirection: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
-                                            d_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
-                                            d_lightStrength: 1.0,
-                                        };
-            let light_spot = g_object::Light_Spot {
-                                            s_lightPos: Vector4::new(10.0, 10.0, 10.0, 1.0).into(),
-                                            s_lightDirection: Vector4::new(10.0, -10.0, 10.0, 1.0).into(),
-                                            s_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
-                                            s_cutOff: 45.0,
-                                        };
-
-            let light_point = g_object::Light_Point {
-                                            l_lightPos: Vector4::new(2.0, 2.0, 2.0, 1.0).into(),
-                                            l_lightColor: Vector4::new(1.0, 0.95, 0.95, 1.0).into(),
-                                            l_constant: 1.0,
-                                            l_linear: 0.09,
-                                            l_quadratic: 0.032,
-                                            l_lightStrength: 1.0,
-                                        };
-            */
-            //New light passing
+            /*New light passing
             for dir_light in 0..current_dir_lights.len() {
                 encoder.update_buffer(&model.data.dir_light, &[current_dir_lights[dir_light]], dir_light);
             }
@@ -208,8 +197,12 @@ impl<R: gfx::Resources> ModelManager<R> {
 
             for point_light in 0..current_point_lights.len() {
                 encoder.update_buffer(&model.data.point_light, &[current_point_lights[point_light]], point_light);
+                println!("{:?}", current_point_lights[point_light].p_quadratic);
             }
-
+            */
+            encoder.update_buffer(&model.data.dir_light, &current_dir_lights[..], 0);
+            encoder.update_buffer(&model.data.spot_light, &current_spot_lights[..], 0);
+            encoder.update_buffer(&model.data.point_light, &current_point_lights[..], 0);
 
             //Material Properties
             let material = g_object::Material { shininess: model.material.shininess,
