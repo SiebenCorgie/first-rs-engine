@@ -6,24 +6,24 @@ use cgmath::*;
 //in gfx_define!
 //They'll form the base for any light combination
 pub struct Light_Directional {
-    d_lightDirection: [f32; 4] ,
-    d_lightColor: [f32; 4] ,
-    d_lightStrength: f32 ,
+    pub d_lightDirection: [f32; 4] ,
+    pub d_lightColor: [f32; 4] ,
+    pub d_lightStrength: f32 ,
 }
 pub struct Light_Spot {
-    s_lightPos: [f32; 4] ,
-    s_lightDirection: [f32; 4] ,
-    s_lightColor: [f32; 4] ,
-    s_cutOff: f32 ,
+    pub s_lightPos: [f32; 4] ,
+    pub s_lightDirection: [f32; 4] ,
+    pub s_lightColor: [f32; 4] ,
+    pub s_cutOff: f32 ,
 
 }
 pub struct Light_Point {
-    l_lightPos: [f32; 4] ,
-    l_lightColor: [f32; 4] ,
-    l_constant: f32 ,
-    l_linear: f32 ,
-    l_quadratic: f32 ,
-    l_lightStrength: f32 ,
+    pub p_lightPos: [f32; 4] ,
+    pub p_lightColor: [f32; 4] ,
+    pub p_constant: f32 ,
+    pub p_linear: f32 ,
+    pub p_quadratic: f32 ,
+    pub p_lightStrength: f32 ,
 }
 
 
@@ -57,35 +57,35 @@ impl Light_Point{
                 linear: f32, quadratic: f32, strength: f32) -> Self {
         //Still have to store a Vec4 because some offset problems
         //When passing to glsl in the pipline
-        Light_Point{ l_lightPos: position.extend(1.0).into(),
-                    l_lightColor: color.extend(1.0).into(),
-                    l_constant: constant ,
-                    l_linear: linear ,
-                    l_quadratic: quadratic ,
-                    l_lightStrength: strength}
+        Light_Point{p_lightPos: position.extend(1.0).into(),
+                    p_lightColor: color.extend(1.0).into(),
+                    p_constant: constant ,
+                    p_linear: linear ,
+                    p_quadratic: quadratic ,
+                    p_lightStrength: strength}
     }
     pub fn set_position(&mut self, new_pos: Vector3<f32>){
-        self.l_lightPos = new_pos.extend(1.0).into();
+        self.p_lightPos = new_pos.extend(1.0).into();
     }
 
     pub fn set_color(&mut self, new_color: Vector3<f32>){
-        self.l_lightColor = new_color.extend(1.0).into();
+        self.p_lightColor = new_color.extend(1.0).into();
     }
 
     pub fn set_constant(&mut self, new_constant: f32){
-        self.l_constant = new_constant;
+        self.p_constant = new_constant;
     }
 
     pub fn set_linear(&mut self, new_linear: f32){
-        self.l_linear = new_linear;
+        self.p_linear = new_linear;
     }
 
     pub fn set_quadratic(&mut self, new_quadratic: f32){
-        self.l_quadratic = new_quadratic;
+        self.p_quadratic = new_quadratic;
     }
 
     pub fn set_strength(&mut self, new_strength: f32){
-        self.l_lightStrength = new_strength;
+        self.p_lightStrength = new_strength;
     }
 
 }

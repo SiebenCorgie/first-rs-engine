@@ -5,10 +5,11 @@ use gfx;
 use gfx_window_glutin;
 
 use gfx::traits::FactoryExt;
-use gfx::{Bundle, texture, Device};
+use gfx::*;
 
 use t_obj_importer;
 use e_material;
+use e_lights_manager;
 
 use cgmath::*;
 
@@ -31,21 +32,29 @@ gfx_defines!{
         d_lightDirection: [f32; 4] = "d_lightPos",
         d_lightColor: [f32; 4] = "d_lightColor",
         d_lightStrength: f32 = "d_lightStrength",
+        d_active: bool = "d_active",
     }
     constant Light_Spot {
         s_lightPos: [f32; 4] = "s_lightPos",
         s_lightDirection: [f32; 4] = "s_lightDirection",
         s_lightColor: [f32; 4] = "s_lightColor",
         s_cutOff: f32 = "s_cutOff",
-
+        s_active: bool = "s_active",
     }
     constant Light_Point {
-        l_lightPos: [f32; 4] = "p_lightPos",
-        l_lightColor: [f32; 4] = "p_lightColor",
-        l_constant: f32 = "p_constant",
-        l_linear: f32 = "p_linear",
-        l_quadratic: f32 = "p_quadratic",
-        l_lightStrength: f32 = "p_lightStrength",
+        p_lightPos: [f32; 4] = "p_lightPos",
+        p_lightColor: [f32; 4] = "p_lightColor",
+        p_constant: f32 = "p_constant",
+        p_linear: f32 = "p_linear",
+        p_quadratic: f32 = "p_quadratic",
+        p_lightStrength: f32 = "p_lightStrength",
+        p_active: bool = "p_active",
+    }
+
+    constant Light_Info {
+        max_dir_lights: i32 = "max_dir_lights",
+        max_spot_lights: i32 = "max_spot_lights",
+        max_point_lights: i32 = "max_point_lights",
     }
 
     constant Camera {
@@ -65,6 +74,8 @@ gfx_defines!{
         dir_light: gfx::ConstantBuffer<Light_Directional> = "Light_Directional",
         spot_light: gfx::ConstantBuffer<Light_Spot> = "Light_Spot",
         point_light: gfx::ConstantBuffer<Light_Point> = "Light_Point",
+
+        light_info: gfx::ConstantBuffer<Light_Info> = "Light_Info",
 
         material: gfx::ConstantBuffer<Material> = "Material",
 
@@ -111,7 +122,8 @@ impl<R: gfx::Resources> Object <R> {
                     main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
                     main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
                     vertex_data: Vec<Vertex>, index_data: Vec<u32>,
-                    material: &mut e_material::Material) -> Self
+                    material: &mut e_material::Material,
+                    light_manager: &e_lights_manager::LightManager) -> Self
     where F: gfx::Factory<R>,
     {
         let w_loc = Vector3::new(0.0, 0.0, 0.0);
@@ -142,9 +154,13 @@ impl<R: gfx::Resources> Object <R> {
             vbuf: vertex_buffer,
             locals: factory.create_constant_buffer(1),
 
-            dir_light: factory.create_constant_buffer(1),
-            spot_light: factory.create_constant_buffer(1),
-            point_light: factory.create_constant_buffer(1),
+            //Create light buffers according to the light settings
+            dir_light: factory.create_constant_buffer(light_manager.light_settings.max_dir_lights as usize),
+            spot_light: factory.create_constant_buffer(light_manager.light_settings.max_spot_lights as usize),
+            point_light: factory.create_constant_buffer(light_manager.light_settings.max_point_lights as usize),
+
+            //Create the light info for this object
+            light_info: factory.create_constant_buffer(1),
 
             material: factory.create_constant_buffer(1),
 

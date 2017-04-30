@@ -7,21 +7,21 @@ use std::collections::HashMap;
 
 
 pub struct LightOptions {
-        max_dir_lights: u32,
-        max_spot_lights: u32,
-        max_point_lights: u32,
+        pub max_dir_lights: u32,
+        pub max_spot_lights: u32,
+        pub max_point_lights: u32,
 
-        current_dir_lights: u32,
-        current_spot_lights: u32,
-        current_point_lights: u32,
+        pub current_dir_lights: u32,
+        pub current_spot_lights: u32,
+        pub current_point_lights: u32,
 }
 
 
 pub struct LightManager {
-    light_settings: LightOptions,
-    directional_lights: HashMap<String, e_light::Light_Directional>,
-    spot_lights: HashMap<String, e_light::Light_Spot>,
-    point_lights: HashMap<String, e_light::Light_Point>,
+    pub light_settings: LightOptions,
+    pub directional_lights: HashMap<String, e_light::Light_Directional>,
+    pub spot_lights: HashMap<String, e_light::Light_Spot>,
+    pub point_lights: HashMap<String, e_light::Light_Point>,
 }
 
 

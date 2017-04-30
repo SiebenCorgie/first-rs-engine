@@ -58,9 +58,9 @@ pub fn main() {
     let mut input_handler: e_input::InputSystem = e_input::InputSystem::new();
     let mut time_handler: e_time::Time = e_time::Time::new();
     let mut camera: g_camera::Camera = g_camera::Camera::new();
-    let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
     let mut material_manager: e_material_manager::MaterialManager = e_material_manager::MaterialManager::new();
     let mut light_manager: e_lights_manager::LightManager = e_lights_manager::LightManager::new(2, 10, 10);
+    let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
 
     //add a default material with some different textures
     material_manager.add("standart_material",
@@ -82,7 +82,10 @@ pub fn main() {
                                 Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), 45.0));
 
     //Add some models
-    model_manager.import_model("sphere", "data/sphere.obj", &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
+    model_manager.import_model("sphere", "data/sphere.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("standart_material"),
+                                &light_manager);
 
 
     model_manager.print_scene();
@@ -109,7 +112,9 @@ pub fn main() {
             //if M is pressed change shininess
             if input_handler.keys.M == true {
                 model_manager.import_model("cube", "data/cube.obj",
-                                            &mut factory, &mut main_color, &mut main_depth, &mut material_manager.get_material("standart_material"));
+                                            &mut factory, &mut main_color, &mut main_depth,
+                                            &mut material_manager.get_material("standart_material"),
+                                            &light_manager);
             }
             if input_handler.keys.C{
                 model_manager.print_scene();
@@ -141,7 +146,7 @@ pub fn main() {
         //DO Transform
         let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 1.0, 50.0).into();
 
-        model_manager.render(&mut encoder, &camera, proj);
+        model_manager.render(&mut encoder, &camera, proj, &mut light_manager);
 
         //Send to gpu
         encoder.flush(&mut device);
