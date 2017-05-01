@@ -42,6 +42,10 @@ gfx_defines!{
         s_lightDirection: [f32; 4] = "s_lightDirection",
         s_lightColor: [f32; 4] = "s_lightColor",
         s_cutOff: f32 = "s_cutOff",
+        s_outerCutOff: f32 = "s_outerCutOff",
+        s_constant: f32 = "s_constant",
+        s_linear: f32 = "s_linear",
+        s_quadratic: f32 = "s_quadratic",
         _pad1: f32 = "_pad1",
         _pad2: f32 = "_pad2",
         //_pad3: f32 = "_pad3",
@@ -74,6 +78,8 @@ gfx_defines!{
     constant Material {
         shininess: f32 = "shininess",
         ambient: f32 = "ambient",
+        diffuse_intensity: f32 = "diffuse_intensity",
+        specular: f32 = "specular",
     }
 
     //Cube Pipeline
@@ -151,8 +157,8 @@ impl<R: gfx::Resources> Object <R> {
         ).unwrap();
         let (vertex_buffer, slice) = factory.create_vertex_buffer_with_slice(&vertex_data, index_data.as_slice());
 
-        let sampler = factory.create_sampler_linear();
-
+        //let sampler = factory.create_sampler_linear();
+        let sampler = factory.create_sampler(texture::SamplerInfo::new(texture::FilterMethod::Trilinear, texture::WrapMode::Tile));
 
         let diffuse_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.diffuse);
         let specular_texture = gfx_load_texture::<F, R>(&mut factory, &i_material.specular);

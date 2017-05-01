@@ -79,7 +79,6 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 _pad1: 1.0,
                                                 _pad2: 1.0,
                                                 d_active: true,
-
                                             });
                 //Add active index
                 active_dir_slots += 1;
@@ -98,6 +97,10 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                 s_lightDirection: light.s_lightDirection,
                                                 s_lightColor: light.s_lightColor,
                                                 s_cutOff: light.s_cutOff,
+                                                s_outerCutOff: light.s_outerCutOff,
+                                                s_constant: light.s_constant,
+                                                s_linear: light.s_linear,
+                                                s_quadratic: light.s_quadratic,
                                                 _pad1: 1.0,
                                                 _pad2: 1.0,
                                                 //_pad3: 1.0,
@@ -156,7 +159,9 @@ impl<R: gfx::Resources> ModelManager<R> {
 
             //Material Properties
             let material = g_object::Material { shininess: model.material.shininess,
-                                                ambient: model.material.ambient,};
+                                                ambient: model.material.ambient,
+                                                diffuse_intensity: model.material.diffuse_intensity,
+                                                specular: model.material.specular_instensity};
 
             //Camera
             let camera = g_object::Camera { viewPos: camera.cameraPos.extend(1.0).into()};

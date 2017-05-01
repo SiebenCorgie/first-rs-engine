@@ -122,9 +122,14 @@ impl Camera {
                     Point3::new(tmp_target.x, tmp_target.y, tmp_target.z),
                     Vector3::new(self.cameraUp.x, self.cameraUp.y, self.cameraUp.z),
                 ).into();
-
         view
+    }
+    pub fn get_direction(&self) -> Vector3<f32> {
+        self.cameraFront
+    }
 
+    pub fn get_position(&self) -> Vector3<f32> {
+        self.cameraPos
     }
 }
 

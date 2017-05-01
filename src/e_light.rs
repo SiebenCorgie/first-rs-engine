@@ -15,6 +15,10 @@ pub struct Light_Spot {
     pub s_lightDirection: [f32; 4] ,
     pub s_lightColor: [f32; 4] ,
     pub s_cutOff: f32 ,
+    pub s_outerCutOff: f32,
+    pub s_constant: f32,
+    pub s_linear: f32,
+    pub s_quadratic: f32,
 
 }
 pub struct Light_Point {
@@ -93,13 +97,22 @@ impl Light_Point{
 //Spot light
 impl Light_Spot {
     pub fn new( position: Vector3<f32>, direction: Vector3<f32>,
-                color: Vector3<f32>, cut_off: f32) -> Self {
+                color: Vector3<f32>,
+                cut_off: f32,
+                outerCutOff: f32,
+                constant: f32,
+                linear: f32,
+                quadratic: f32,) -> Self {
         //Still have to store a Vec4 because some offset problems
         //When passing to glsl in the pipline
         Light_Spot{ s_lightPos: position.extend(1.0).into(),
                     s_lightDirection: direction.extend(1.0).into(),
                     s_lightColor: color.extend(1.0).into(),
-                    s_cutOff: cut_off}
+                    s_cutOff: cut_off,
+                    s_outerCutOff: outerCutOff,
+                    s_constant: constant,
+                    s_linear: linear,
+                    s_quadratic: quadratic,}
     }
     pub fn set_position(&mut self, new_pos: Vector3<f32>){
         self.s_lightPos = new_pos.extend(1.0).into();
@@ -115,6 +128,22 @@ impl Light_Spot {
 
     pub fn set_cut_off(&mut self, new_cut_off: f32){
         self.s_cutOff = new_cut_off;
+    }
+
+    pub fn set_outerCutOff(&mut self, new_cut_off: f32){
+        self.s_outerCutOff = new_cut_off;
+    }
+
+    pub fn set_constant(&mut self, new: f32){
+        self.s_constant = new;
+    }
+
+    pub fn set_linear(&mut self, new: f32){
+        self.s_linear = new;
+    }
+
+    pub fn set_quadratic(&mut self, new: f32){
+        self.s_quadratic = new;
     }
 
 }

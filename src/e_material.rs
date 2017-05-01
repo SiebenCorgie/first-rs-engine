@@ -8,6 +8,8 @@ pub struct Material {
     pub normal: String,
     pub ambient: f32,
     pub shininess: f32,
+    pub diffuse_intensity: f32,
+    pub specular_instensity: f32,
 }
 
 
@@ -28,10 +30,11 @@ impl Material{
     pub fn new() -> Self
     {
 
-        Material{ ambient: 0.1, shininess: 32.0,
+        Material{ ambient: 0.1, shininess: 32.0, diffuse_intensity: 1.0, specular_instensity: 1.0,
                 diffuse: String::from("data/Textures/fallback_diff.png"),
                 specular: String::from("data/Textures/fallback_spec.png"),
-                normal: String::from("data/Textures/fallback_nrm.png")}
+                normal: String::from("data/Textures/fallback_nrm.png"),
+                }
     }
 
     pub fn set_textures(&mut self, diffuse_path: &str, specular_path: &str, normal_path: &str)
