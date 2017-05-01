@@ -94,11 +94,10 @@ void main() {
   // Phase 1: Directional lighting
   vec3 result = vec3(0.0);
 
-  /*
+
   for(int i = 0; i < max_dir_lights; i++)
-    if (d_light[i].d_active)
-      result += CalcDirLight(d_light[i], norm, viewDir);
-  */
+    result += CalcDirLight(d_light[i], norm, viewDir);
+  
   // Phase 2: Point lights
   for(int i = 0; i < max_point_lights; i++)
     if (p_light[i].p_active)

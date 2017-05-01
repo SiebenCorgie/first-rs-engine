@@ -84,23 +84,9 @@ impl<R: gfx::Resources> ModelManager<R> {
                 //Add active index
                 active_dir_slots += 1;
             }
-            /*
-            //Push inactive till reaching the max lights
-            for index in active_dir_slots..light_manager.light_settings.max_dir_lights {
-                current_dir_lights.push(g_object::Light_Directional {
-                                                d_lightDirection: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
-                                                d_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
-                                                d_lightStrength: 1.0,
-                                                _pad1: 1.0,
-                                                _pad2: 1.0,
-                                                d_active: false,
 
-                                            });
-                //Add deactive index
-                active_dir_slots += 1;
-            }
             println!("INFO: Pushed {} of {} directional lights", active_dir_slots, light_manager.light_settings.max_dir_lights);
-            */
+
         }
 
         //Spot lights
@@ -120,24 +106,9 @@ impl<R: gfx::Resources> ModelManager<R> {
                 //Add active index
                 active_spot_slots += 1;
             }
-            /*
-            //Push inactive till reaching the max lights
-            for index in active_spot_slots..light_manager.light_settings.max_spot_lights {
-                current_spot_lights.push(g_object::Light_Spot {
-                                                s_lightPos: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
-                                                s_lightDirection: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
-                                                s_lightColor: Vector4::new(1.0, 1.0, 1.0, 1.0).into(),
-                                                s_cutOff: 45.0,
-                                                _pad1: 1.0,
-                                                _pad2: 1.0,
-                                                //_pad3: 1.0,
-                                                s_active: false,
-                                            });
-                //Add deactive index
-                active_spot_slots += 1;
-            }
+
             println!("INFO: Pushed {} of {} spot lights", active_spot_slots, light_manager.light_settings.max_spot_lights);
-            */
+
         }
 
         //Point lights
@@ -159,26 +130,9 @@ impl<R: gfx::Resources> ModelManager<R> {
                 //Add active index
                 active_point_slots += 1;
             }
-            /*
-            //Push inactive till reaching the max lights
-            for index in active_point_slots..light_manager.light_settings.max_point_lights {
-                current_point_lights.push(g_object::Light_Point {
-                                                p_lightPos: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
-                                                p_lightColor: Vector4::new(0.0, 0.0, 0.0, 1.0).into(),
-                                                p_constant: 1.0,
-                                                p_linear: 0.09,
-                                                p_quadratic: 0.032,
-                                                p_lightStrength: 1.0,
-                                                _pad1: 1.0,
-                                                _pad2: 1.0,
-                                                _pad3: 1.0,
-                                                p_active: false,
-                                            });
-                //Add deactive index
-                active_point_slots += 1;
-            }
+
             println!("INFO: Pushed {} of {} point lights", active_point_slots, light_manager.light_settings.max_point_lights);
-            */
+
         }
 
         //Render
@@ -195,20 +149,7 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                         max_point_lights: light_manager.light_settings.max_point_lights as i32};
 
 
-            /*New light passing
-            for dir_light in 0..current_dir_lights.len() {
-                encoder.update_buffer(&model.data.dir_light, &[current_dir_lights[dir_light]], dir_light);
-            }
 
-            for spot_light in 0..current_spot_lights.len() {
-                encoder.update_buffer(&model.data.spot_light, &[current_spot_lights[spot_light]], spot_light);
-            }
-
-            for point_light in 0..current_point_lights.len() {
-                encoder.update_buffer(&model.data.point_light, &[current_point_lights[point_light]], point_light);
-                println!("{:?}", current_point_lights[point_light].p_quadratic);
-            }
-            */
             encoder.update_buffer(&model.data.dir_light, &current_dir_lights[..], 0);
             encoder.update_buffer(&model.data.spot_light, &current_spot_lights[..], 0);
             encoder.update_buffer(&model.data.point_light, &current_point_lights[..], 0);

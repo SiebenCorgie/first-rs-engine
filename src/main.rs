@@ -76,18 +76,19 @@ pub fn main() {
     //Add some lights
     light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
                                         Vector3::new(1.0, 0.95, 0.95), 1.0));
+
     light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(10.0, 10.0, 10.0),
                                     Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
 
     light_manager.add_point_light("Point2", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
                                     Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
 
-    light_manager.add_point_light("Point2", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
+    light_manager.add_point_light("Point3", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
                                 Vector3::new(0.0, 0.95, 0.95), 1.0, 0.0014, 0.000007, 1.0));
-
+    /*
     light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
                                 Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), 45.0));
-
+    */                            
     //Add some models
     model_manager.import_model("sphere", "data/sphere.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
