@@ -92,16 +92,10 @@ void main() {
   vec3 norm = normalize(Normal);
   vec3 viewDir = normalize(c_viewPos.xyz - FragPos);
 
-  // == ======================================
-  // Our lighting is set up in 3 phases: directional, point lights and an optional flashlight
-  // For each phase, a calculate function is defined that calculates the corresponding color
-  // per lamp. In the main() function we take all the calculated colors and sum them up for
-  // this fragment's final color.
-  // == ======================================
-  // Phase 1: Directional lighting
+
   vec3 result = vec3(0.0);
 
-
+  //Directional
   for(int i = 0; i < max_dir_lights; i++)
     if (d_light[i].d_active)
     {
@@ -119,8 +113,8 @@ void main() {
     {
       result += CalcSpotLight(s_light[i], norm, FragPos, viewDir);
     }
-  // result += CalcSpotLight(spotLight, norm, FragPos, viewDir);
-  Target0 = vec4(result, 1.0f);
+  //Present
+  Target0 = vec4(result, texture(t_Diffuse, v_TexCoord).a);
 
 }
 
@@ -210,5 +204,4 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir){
   specular *= attenuation;
   //Return ambient if not in angle
     return(ambient+ diffuse + specular);
-
 }

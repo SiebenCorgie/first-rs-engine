@@ -62,6 +62,8 @@ pub fn main() {
     let mut light_manager: e_lights_manager::LightManager = e_lights_manager::LightManager::new(2, 10, 10);
     let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
 
+    gfx::preset::blend::ALPHA;
+
     //add a default material with some different textures
     material_manager.add("standart_material",
                         "data/Textures/fallback_diff.png",
@@ -69,34 +71,38 @@ pub fn main() {
                         "data/Textures/fallback_nrm.png",
                         0.1, 32.0, 1.0, 1.0);
 
-    material_manager.add("ape_mat",
-                        "data/ape_tex.png",
-                        "data/ape_tex.png",
-                        "data/ape_tex_nrm.png",
-                        0.1, 32.0, 1.0, 1.0);
+    material_manager.add("gras_mat",
+                        "/share/3DFiles/TextureLibary/Gras/Greek_Gras_Natural_Diff.png",
+                        "/share/3DFiles/TextureLibary/Gras/Greek_Gras_Natural_Diff_WB.png",
+                        "/share/3DFiles/TextureLibary/Gras/Greek_Gras_Natural_Nrm.png",
+                        0.1, 16.0, 1.0, 1.0);
 
     //Add some lights
 
-    //light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
-    //                                    Vector3::new(1.0, 0.95, 0.95), 1.0));
+    light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
+                                        Vector3::new(1.0, 0.95, 0.95), 1.0));
 
     //light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(10.0, 10.0, 10.0),
-    //                                Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
+    //                               Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
 
     //light_manager.add_point_light("Point2", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
     //                                Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
 
-    light_manager.add_point_light("Point3", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
-                                Vector3::new(0.0, 0.95, 0.95), 1.0, 0.0014, 0.000007, 1.0));
+    //light_manager.add_point_light("Point3", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
+    //                            Vector3::new(0.0, 0.95, 0.95), 1.0, 0.0014, 0.000007, 1.0));
 
-    light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
-                                Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), to_radians(2.5).cos(), to_radians(7.5).cos(),
-                                0.09, 0.032, 1.0));
+    //light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
+    //                            Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), to_radians(12.5).cos(), to_radians(17.5).cos(),
+    //                            0.09, 0.032, 1.0));
 
     //Add some models
-    model_manager.import_model("sphere", "data/torus.obj", &mut factory,
+    model_manager.import_model("sphere", "data/terrain.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
+                                &light_manager);
+    model_manager.import_model("sphere", "data/gras.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("gras_mat"),
                                 &light_manager);
 
 
@@ -152,7 +158,7 @@ pub fn main() {
                 model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(speed, 0.0, 0.0));
             }
             if input_handler.keys.Arrow_Down {
-                light_manager.get_point_light("Point3").unwrap().set_position(Vector3::new(0.0, -150.0, 0.0));
+                //light_manager.get_point_light("Point3").unwrap().set_position(Vector3::new(0.0, -150.0, 0.0));
             }
 
         }
@@ -161,8 +167,8 @@ pub fn main() {
         //DO Transform
         let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 1.0, 50.0).into();
 
-        light_manager.get_spot_light("Spot").unwrap().set_direction(-camera.get_direction());
-        light_manager.get_spot_light("Spot").unwrap().set_position(camera.get_position());
+        //light_manager.get_spot_light("Spot").unwrap().set_direction(-camera.get_direction());
+        //light_manager.get_spot_light("Spot").unwrap().set_position(camera.get_position());
 
 
         model_manager.render(&mut encoder, &camera, proj, &mut light_manager);
@@ -173,7 +179,7 @@ pub fn main() {
         window.swap_buffers().unwrap();
         device.cleanup();
 
-        println!("FPS: {}", 1.0 /time_handler.delta_time());
+        //println!("FPS: {}", 1.0 /time_handler.delta_time());
 
     }
 }

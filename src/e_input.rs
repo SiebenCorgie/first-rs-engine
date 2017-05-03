@@ -126,7 +126,7 @@ impl InputSystem {
             }
         }
 
-        println!("X: {} ; Y: {}", self.keys.Delta_x, self.keys.Delta_y);
+        //println!("X: {} ; Y: {}", self.keys.Delta_x, self.keys.Delta_y);
 
         //Arrow capturing
         let mut win_pos_x = 0 as i32;

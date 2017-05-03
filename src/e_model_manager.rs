@@ -84,7 +84,7 @@ impl<R: gfx::Resources> ModelManager<R> {
                 active_dir_slots += 1;
             }
 
-            println!("INFO: Pushed {} of {} directional lights", active_dir_slots, light_manager.light_settings.max_dir_lights);
+            //println!("INFO: Pushed {} of {} directional lights", active_dir_slots, light_manager.light_settings.max_dir_lights);
 
         }
 
@@ -110,7 +110,7 @@ impl<R: gfx::Resources> ModelManager<R> {
                 active_spot_slots += 1;
             }
 
-            println!("INFO: Pushed {} of {} spot lights", active_spot_slots, light_manager.light_settings.max_spot_lights);
+            //println!("INFO: Pushed {} of {} spot lights", active_spot_slots, light_manager.light_settings.max_spot_lights);
 
         }
 
@@ -134,7 +134,7 @@ impl<R: gfx::Resources> ModelManager<R> {
                 active_point_slots += 1;
             }
 
-            println!("INFO: Pushed {} of {} point lights", active_point_slots, light_manager.light_settings.max_point_lights);
+            //println!("INFO: Pushed {} of {} point lights", active_point_slots, light_manager.light_settings.max_point_lights);
 
         }
 
