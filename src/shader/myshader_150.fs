@@ -96,19 +96,19 @@ void main() {
   vec3 result = vec3(0.0);
 
   //Directional
-  for(int i = 0; i < max_dir_lights; i++)
+  for(int i = 0; i < 2; i++)
     if (d_light[i].d_active)
     {
       result += CalcDirLight(d_light[i], norm, viewDir);
     }
   // Phase 2: Point lights
-  for(int i = 0; i < max_point_lights; i++)
+  for(int i = 0; i < 2; i++)
     if (p_light[i].p_active)
     {
       result += CalcPointLight(p_light[i], norm, FragPos, viewDir);
     }
   // Phase 3: Spot light
-  for(int i = 0; i < max_spot_lights; i++)
+  for(int i = 0; i < 1; i++)
     if (s_light[i].s_active)
     {
       result += CalcSpotLight(s_light[i], norm, FragPos, viewDir);
