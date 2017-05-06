@@ -157,12 +157,26 @@ impl<R: gfx::Resources> Object <R> {
         let i_material = material.clone();
 
 
-        //Create Triangle
-        let pso = factory.create_pipeline_simple(
+        //load default shader
+        let mut pso = factory.create_pipeline_simple(
             include_bytes!("shader/myshader_150.vs"),
             include_bytes!("shader/myshader_150.fs"),
             my_pipe::new()
         ).unwrap();
+
+        //load shader Masked if needed
+        match material_type {
+            MaterialType::MASKED => pso = factory.create_pipeline_simple(
+                                                include_bytes!("shader/masked.vs"),
+                                                include_bytes!("shader/masked.fs"),
+                                                my_pipe::new()
+                                            ).unwrap(),
+            MaterialType::OPAQUE => {},
+        }
+
+
+
+
         let (vertex_buffer, slice) = factory.create_vertex_buffer_with_slice(&vertex_data, index_data.as_slice());
 
         //let sampler = factory.create_sampler_linear();

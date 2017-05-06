@@ -147,9 +147,17 @@ impl<R: gfx::Resources> ModelManager<R> {
                                             view: camera.return_view_matrix()
                                         };
 
+            //Changed the max settings to the currently in use lights
+            let light_info_pass = g_object::Light_Info {max_dir_lights: active_dir_slots,
+                                                        max_spot_lights: active_spot_slots,
+                                                        max_point_lights: active_point_slots};
+
+
+            /* BU
             let light_info_pass = g_object::Light_Info {max_dir_lights: light_manager.light_settings.max_dir_lights as i32,
                                                         max_spot_lights: light_manager.light_settings.max_spot_lights as i32,
                                                         max_point_lights: light_manager.light_settings.max_point_lights as i32};
+            */
 
 
 
