@@ -118,6 +118,12 @@ impl Vertex {
     }
 }
 
+#[derive(Clone, Copy)]
+pub enum MaterialType {
+    OPAQUE,
+    MASKED,
+}
+
 
 pub struct Object<R: gfx::Resources> {
     pub pso: gfx::PipelineState<R, my_pipe::Meta>,
@@ -129,6 +135,7 @@ pub struct Object<R: gfx::Resources> {
     pub world_scale: Vector3<f32>,
     //Material
     pub material: e_material::Material,
+    pub material_type: MaterialType,
 }
 
 
@@ -139,6 +146,7 @@ impl<R: gfx::Resources> Object <R> {
                     main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
                     vertex_data: Vec<Vertex>, index_data: Vec<u32>,
                     material: &mut e_material::Material,
+                    material_type: MaterialType,
                     light_manager: &e_lights_manager::LightManager) -> Self
     where F: gfx::Factory<R>,
     {
@@ -195,11 +203,14 @@ impl<R: gfx::Resources> Object <R> {
 
         Object {pso: pso,
                 data: data,
-                material: i_material,
                 slices: slice,
+
                 world_location: w_loc,
                 world_scale: w_sca,
                 world_rotation: w_rot,
+
+                material_type: material_type,
+                material: i_material,
             }
     }
 

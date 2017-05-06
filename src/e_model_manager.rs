@@ -184,6 +184,7 @@ impl<R: gfx::Resources> ModelManager<R> {
                         main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
                         main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
                         mut material: &mut e_material::Material,
+                        material_type: g_object::MaterialType,
                         light_manager: &e_lights_manager::LightManager)
         where F: gfx::Factory<R>,
         {
@@ -196,7 +197,7 @@ impl<R: gfx::Resources> ModelManager<R> {
             let final_name: String = String::from(name) + &"_" + &name_vec[i];
             self.add(final_name, g_object::Object::new(factory, main_color, main_depth,
                                                         mesh_vec[i].clone(), indice_vec[i].clone(),
-                                                        &mut material, light_manager));
+                                                        &mut material, material_type.clone(), light_manager));
         }
     }
 

@@ -100,10 +100,12 @@ pub fn main() {
     model_manager.import_model("sphere", "data/ape.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
+                                g_object::MaterialType::OPAQUE,
                                 &light_manager);
     model_manager.import_model("sphere", "data/cube.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
+                                g_object::MaterialType::OPAQUE,
                                 &light_manager);
 
 
@@ -133,6 +135,7 @@ pub fn main() {
                 model_manager.import_model("cube", "data/cube.obj",
                                             &mut factory, &mut main_color, &mut main_depth,
                                             &mut material_manager.get_material("standart_material"),
+                                            g_object::MaterialType::OPAQUE,
                                             &light_manager);
             }
             if input_handler.keys.C{
