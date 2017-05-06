@@ -1,9 +1,10 @@
 #version 150 core
 
 #define MAX_DIR_LIGHTS 1
-#define MAX_POINT_LIGHTS 3
+#define MAX_POINT_LIGHTS 6
 #define MAX_SPOT_LIGHTS 1
 
+const float kPi = 3.14159265;
 
 in vec2 v_TexCoord;
 out vec4 Target0;
@@ -121,8 +122,12 @@ void main() {
     {
       result += CalcSpotLight(s_light[i], norm, FragPos, viewDir);
     }
-  //Present
 
+  //Gamma Correction
+  float gamma = 2.2;
+  result = pow(result, vec3(gamma));
+
+  //Present
   Target0 = vec4(result, 1.0);
 
 }
@@ -136,18 +141,20 @@ vec3 Nothing(){
 // Calculates the color when using a directional light.
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 {
-    vec3 lightDir = normalize(-light.d_lightDir.xyz);
-    // Diffuse shading
-    float diff = max(dot(normal, lightDir), 0.0);
-    // Specular shading blinn
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+  vec3 lightDir = normalize(-light.d_lightDir.xyz);
+  // Diffuse shading
+  float diff = max(dot(normal, lightDir), 0.0);
+  //Specular
+  //Snacked the EnergyConservation from rorydriscoll.com
+  float kEnergyConservation = ( 8.0 + shininess ) / ( 8.0 * kPi );
+  vec3 halfwayDir = normalize(lightDir + viewDir);
+  float spec = kEnergyConservation * pow(max(dot(normal, halfwayDir), 0.0), shininess);
 
-    // Combine results
-    vec3 ambient = ambient * vec3(texture(t_Diffuse, v_TexCoord));
-    vec3 diffuse = light.d_lightColor.xyz * diff * vec3(texture(t_Diffuse, v_TexCoord));
-    vec3 specular = specular * spec * vec3(texture(t_Specular, v_TexCoord));
-    return (ambient + diffuse + specular);
+  // Combine results
+  vec3 ambient = ambient * vec3(texture(t_Diffuse, v_TexCoord));
+  vec3 diffuse = light.d_lightColor.xyz * diff * vec3(texture(t_Diffuse, v_TexCoord));
+  vec3 specular = specular * spec * vec3(texture(t_Specular, v_TexCoord));
+  return (ambient + diffuse + specular);
 }
 
 // Calculates the color when using a point light.
@@ -170,9 +177,10 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
   vec3 diffuse = light.p_lightColor.xyz * diff *  vec3(texture(t_Diffuse, v_TexCoord));
 
   // Specular
-  // Specular shading blinn
+  //Snacked the EnergyConservation from rorydriscoll.com
+  float kEnergyConservation = ( 8.0 + shininess ) / ( 8.0 * kPi );
   vec3 halfwayDir = normalize(lightDir + viewDir);
-  float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+  float spec = kEnergyConservation * pow(max(dot(normal, halfwayDir), 0.0), shininess);
   vec3 specular = specular * spec * vec3(texture(t_Specular, v_TexCoord));
 
   //point light pre_stage
@@ -194,8 +202,10 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir){
   vec3 diffuse = light.s_lightColor.xyz * diff * vec3(texture(t_Diffuse, v_TexCoord));
 
   // Specular shading blinn
+  //Snacked the EnergyConservation from rorydriscoll.com
+  float kEnergyConservation = ( 8.0 + shininess ) / ( 8.0 * kPi );
   vec3 halfwayDir = normalize(lightDir + viewDir);
-  float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+  float spec = kEnergyConservation * pow(max(dot(normal, halfwayDir), 0.0), shininess);
   vec3 specular = specular * spec * vec3(texture(t_Specular, v_TexCoord));
 
   // Spotlight (soft edges)

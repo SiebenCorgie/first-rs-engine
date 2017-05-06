@@ -59,7 +59,7 @@ pub fn main() {
     let mut time_handler: e_time::Time = e_time::Time::new();
     let mut camera: g_camera::Camera = g_camera::Camera::new();
     let mut material_manager: e_material_manager::MaterialManager = e_material_manager::MaterialManager::new();
-    let mut light_manager: e_lights_manager::LightManager = e_lights_manager::LightManager::new(2, 1, 3);
+    let mut light_manager: e_lights_manager::LightManager = e_lights_manager::LightManager::new(0, 1, 6);
     let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
 
 
@@ -74,7 +74,7 @@ pub fn main() {
                         "data/Textures/fallback_diff.png",
                         "data/Textures/fallback_spec.png",
                         "data/Textures/fallback_nrm.png",
-                        0.1, 32.0, 1.0, 1.0);
+                        0.1, 64.0, 0.8, 1.0);
 
     material_manager.add("gras_mat",
                         "/share/3DFiles/TextureLibary/Gras/Grasplades/Grass_R_02.png",
@@ -84,17 +84,31 @@ pub fn main() {
 
     //Add some lights
 
-    light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
-                                        Vector3::new(1.0, 0.8, 0.8), 1.0));
+    //light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
+    //                                    Vector3::new(1.0, 0.8, 0.8), 1.0));
 
-    light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(10.0, 10.0, 10.0),
-                                   Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
+    light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(2.0, 2.0, 2.0),
+                                   Vector3::new(1.0, 0.0, 0.0), 1.0, 0.09, 0.032, 1.0));
 
-    light_manager.add_point_light("Point2", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
-                                    Vector3::new(1.0, 0.95, 0.95), 1.0, 0.09, 0.032, 1.0));
+    light_manager.add_point_light("Point2", e_light::Light_Point::new(Vector3::new(-2.0, -2.0, -2.0),
+                                    Vector3::new(0.0, 1.0, 0.0), 1.0, 0.09, 0.032, 1.0));
 
-    light_manager.add_point_light("Point3", e_light::Light_Point::new(Vector3::new(-10.0, 0.0, 0.0),
-                                Vector3::new(1.0, 0.85, 0.85), 1.0, 0.0014, 0.000007, 1.0));
+    light_manager.add_point_light("Point3", e_light::Light_Point::new(Vector3::new(3.0, 3.0, 3.0),
+                                Vector3::new(0.0, 0.0, 1.0), 1.0, 0.0014, 0.000007, 1.0));
+
+    light_manager.add_point_light("Point4", e_light::Light_Point::new(Vector3::new(-3.0, -3.0, -3.0),
+                                Vector3::new(1.0, 1.0, 0.0), 1.0, 0.09, 0.032, 1.0));
+
+    light_manager.add_point_light("Point5", e_light::Light_Point::new(Vector3::new(4.0, 4.0, 4.0),
+                                Vector3::new(0.0, 1.0, 1.0), 1.0, 0.09, 0.032, 1.0));
+
+    light_manager.add_point_light("Point6", e_light::Light_Point::new(Vector3::new(-4.0, -4.0, -4.0),
+                                Vector3::new(1.0, 0.0, 1.0), 1.0, 0.0014, 0.000007, 1.0));
+
+
+
+
+
 
     light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
                                 Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), to_radians(12.5).cos(), to_radians(17.5).cos(),
