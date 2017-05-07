@@ -59,7 +59,7 @@ pub fn main() {
     let mut time_handler: e_time::Time = e_time::Time::new();
     let mut camera: g_camera::Camera = g_camera::Camera::new();
     let mut material_manager: e_material_manager::MaterialManager = e_material_manager::MaterialManager::new();
-    let mut light_manager: e_lights_manager::LightManager = e_lights_manager::LightManager::new(0, 1, 6);
+    let mut light_manager: e_lights_manager::LightManager = e_lights_manager::LightManager::new(1, 1, 6);
     let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
 
 
@@ -84,8 +84,8 @@ pub fn main() {
 
     //Add some lights
 
-    //light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
-    //                                    Vector3::new(1.0, 0.8, 0.8), 1.0));
+    light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
+                                        Vector3::new(1.0, 0.8, 0.8), 1.0));
 
     light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(2.0, 2.0, 2.0),
                                    Vector3::new(1.0, 0.0, 0.0), 1.0, 0.09, 0.032, 1.0));
