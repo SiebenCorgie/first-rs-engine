@@ -52,16 +52,16 @@ impl Importer {
         	}
 
         	// Normals and texture coordinates are also loaded, but not printed in this example
-        	//println!("model[{}].vertices: {}", i, mesh.positions.len() / 3);
+        	println!("model[{}].vertices: {}", i, mesh.positions.len() / 3);
         	assert!(mesh.positions.len() % 3 == 0);
 
             //Create prototype_Mesh_Positions
         	for v in 0..mesh.positions.len() / 3 {
-        	//	println!("    v[{}] = ({}, {}, {})", v, mesh.positions[3 * v],
-        	//		mesh.positions[3 * v + 1], mesh.positions[3 * v + 2]);
+        		println!("    v[{}] = ({}, {}, {})", v, mesh.positions[3 * v],
+        			mesh.positions[3 * v + 1], mesh.positions[3 * v + 2]);
 
-                //println!("    uv[{}] = (u: {}, v: {})", v, mesh.texcoords[v * 2],
-            	//	mesh.texcoords[v * 2 + 1],);
+                println!("    uv[{}] = (u: {}, v: {})", v, mesh.texcoords[v * 2],
+            		mesh.texcoords[v * 2 + 1],);
 
                 if (!mesh.normals.is_empty()) && (!mesh.texcoords.is_empty()) {
                     //Write Vertex_Struct for all vertex of this object
@@ -69,7 +69,12 @@ impl Importer {
                         [mesh.positions[3 * v], mesh.positions[3 * v + 1],  mesh.positions[3 * v + 2]], //Location
                         [mesh.texcoords[2 * v], mesh.texcoords[2 * v + 1]], //UV
                         [mesh.normals[3 * v], mesh.normals[3 * v + 1], mesh.normals[3 * v + 2]], //Normal
-                        [1.0, 1.0, 1.0])); //Color (vertex) //currently not supported
+                        [1.0, 1.0, 1.0],//Color (vertex) //currently not supported
+                        [1.0, 1.0, 1.0],//Dead Tangent
+                        [1.0, 1.0, 1.0] //dead bitangent
+                        ));
+
+
                 }
                 else {
                     //Write Vertex_Struct for all vertex of this object (only position)
@@ -78,7 +83,10 @@ impl Importer {
                         [mesh.positions[3 * v], mesh.positions[3 * v + 1],  mesh.positions[3 * v + 2]], //Location
                         [1.0, 0.0], //UV
                         [0.0, 0.0, 0.0], //Normal
-                        [1.0, 1.0, 1.0])); //Color (vertex) //currently not supported
+                        [1.0, 1.0, 1.0],//Color (vertex) //currently not supported
+                        [1.0, 1.0, 1.0],//Dead Tangent
+                        [1.0, 1.0, 1.0] //dead bitangent
+                        ));
                 }
         	}
             //Push Vertexes of this object to the pile

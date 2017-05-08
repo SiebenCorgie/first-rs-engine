@@ -17,10 +17,12 @@ use gfx::{Resources, Bundle, texture, Device};
 use cgmath::*;
 
 use t_obj_importer;
+use t_assimp_importer;
 use e_material;
 use e_material_manager;
 use e_light;
 use e_lights_manager;
+
 
 const CLEAR_COLOR: [f32; 4] = [0.05, 0.05, 0.1, 1.0];
 pub type ColorFormat = gfx::format::Rgba8;
@@ -187,7 +189,7 @@ impl<R: gfx::Resources> ModelManager<R> {
         }
     }
 
-    pub fn import_model<F> (&mut self, name: &str, path: &str,
+    pub fn import_model_tobj<F> (&mut self, name: &str, path: &str,
                         factory: &mut F,
                         main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
                         main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
@@ -208,6 +210,28 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                         &mut material, material_type.clone(), light_manager));
         }
     }
+
+    pub fn import_model_assimp<F> (&mut self, name: &str, path: &str,
+                        factory: &mut F,
+                        main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
+                        main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
+                        mut material: &mut e_material::Material,
+                        material_type: g_object::MaterialType,
+                        light_manager: &e_lights_manager::LightManager)
+        where F: gfx::Factory<R>,
+        {
+            let importer = t_assimp_importer::Importer::new();
+            let (mesh_vec, indice_vec, name_vec) = importer.import_mesh(path);
+
+            //Add each mesh individual
+            for i in 0..mesh_vec.len(){
+                let final_name: String = String::from(name) + &"_" + &name_vec[i];
+                self.add(final_name, g_object::Object::new(factory, main_color, main_depth,
+                                                            mesh_vec[i].clone(), indice_vec[i].clone(),
+                                                            &mut material, material_type.clone(), light_manager));
+            }
+    }
+
 
     pub fn print_scene(&self){
         for (name, model) in &self.models {

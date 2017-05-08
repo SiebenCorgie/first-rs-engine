@@ -16,7 +16,7 @@ uniform sampler2D t_Specular;
 
 in vec3 FragPos;
 in vec3 Normal;
-
+in mat3 TBN;
 
 struct DirectionalLight {
   vec4 d_lightDir;
@@ -95,6 +95,11 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main() {
   // Properties
+  vec3 normal = texture(t_Normal, v_TexCoord).rgb;
+  normal = normalize(normal * 2.0 - 1.0);
+  normal = normalize(TBN * normal);
+  //normal.rg = normal.rg + Normal.rg;
+
   vec3 norm = normalize(Normal);
   vec3 viewDir = normalize(c_viewPos.xyz - FragPos);
 
@@ -171,7 +176,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
   vec3 ambient = ambient * vec3(texture(t_Diffuse, v_TexCoord));
 
   // Diffuse
-  vec3 norm = normalize(Normal) ;
+  vec3 norm = normal ;
   vec3 lightDir = normalize(-light.p_lightPos.xyz - FragPos);
   float diff = max(dot(norm, lightDir), 0.0);
   vec3 diffuse = light.p_lightColor.xyz * diff *  vec3(texture(t_Diffuse, v_TexCoord));
@@ -196,7 +201,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir){
   vec3 ambient = ambient * vec3(texture(t_Diffuse, v_TexCoord));
 
   // Diffuse
-  vec3 norm = normalize(Normal);
+  vec3 norm = normal;
   vec3 lightDir = normalize(light.s_lightPos.xyz - FragPos);
   float diff = max(dot(norm, lightDir), 0.0);
   vec3 diffuse = light.s_lightColor.xyz * diff * vec3(texture(t_Diffuse, v_TexCoord));

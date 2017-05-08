@@ -1,5 +1,4 @@
 
-
 extern crate time;
 extern crate image;
 extern crate cgmath;
@@ -9,6 +8,7 @@ extern crate gfx_window_glutin;
 extern crate tobj;
 extern crate glutin;
 extern crate gfx_device_gl;
+extern crate assimp;
 
 use gfx::*;
 
@@ -32,6 +32,7 @@ mod e_material;
 mod e_material_manager;
 mod e_light;
 mod e_lights_manager;
+mod t_assimp_importer;
 
 const CLEAR_COLOR: [f32; 4] = [0.5, 0.5, 1.0, 1.0];
 const PI: f32 = 3.141592653589793238;
@@ -76,6 +77,12 @@ pub fn main() {
                         "data/Textures/fallback_nrm.png",
                         0.1, 64.0, 0.8, 1.0);
 
+    material_manager.add("bark",
+                        "data/Textures/fallback_diff.png",
+                        "data/Textures/fallback_spec.png",
+                        "data/normal.png",
+                        0.1, 64.0, 0.8, 1.0);
+
     material_manager.add("gras_mat",
                         "/share/3DFiles/TextureLibary/Gras/Grasplades/Grass_R_02.png",
                         "/share/3DFiles/TextureLibary/Gras/Grasplades/Grass_R_02.png",
@@ -84,12 +91,12 @@ pub fn main() {
 
     //Add some lights
 
-    light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -1.0, 1.0),
-                                        Vector3::new(1.0, 0.8, 0.8), 1.0));
+    light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -0.5, 1.0),
+                                        Vector3::new(1.0, 0.8, 0.8), 10.0));
 
-    light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(2.0, 2.0, 2.0),
-                                   Vector3::new(1.0, 0.0, 0.0), 1.0, 0.09, 0.032, 1.0));
-
+    //light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(2.0, -2.0, 2.0),
+    //                               Vector3::new(1.0, 0.0, 0.0), 1.0, 0.09, 0.032, 1.0));
+                                   /*
     light_manager.add_point_light("Point2", e_light::Light_Point::new(Vector3::new(-2.0, -2.0, -2.0),
                                     Vector3::new(0.0, 1.0, 0.0), 1.0, 0.09, 0.032, 1.0));
 
@@ -104,7 +111,7 @@ pub fn main() {
 
     light_manager.add_point_light("Point6", e_light::Light_Point::new(Vector3::new(-4.0, -4.0, -4.0),
                                 Vector3::new(1.0, 0.0, 1.0), 1.0, 0.0014, 0.000007, 1.0));
-
+                                */
 
 
 
@@ -114,18 +121,44 @@ pub fn main() {
                                 Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), to_radians(12.5).cos(), to_radians(17.5).cos(),
                                 0.09, 0.032, 1.0));
 
-    //Add some models
-    model_manager.import_model("sphere", "data/gras.obj", &mut factory,
+    /*Add some models
+    model_manager.import_model_tobj("sphere", "data/gras.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("gras_mat"),
                                 g_object::MaterialType::MASKED,
                                 &light_manager);
-    model_manager.import_model("sphere", "data/cube.obj", &mut factory,
+    model_manager.import_model_tobj("sphere", "data/cube.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
 
+    model_manager.import_model_assimp("sphere", "data/gras.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("gras_mat"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+
+    model_manager.import_model_assimp("sphere", "data/cube.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("standart_material"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+    */
+
+    model_manager.import_model_assimp("sphere", "data/fbx.fbx", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("bark"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+    /*
+    model_manager.import_model_assimp("sphere", "data/cube.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("standart_material"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+    */
+    println!("##################################################");
 
     model_manager.print_scene();
 
@@ -150,7 +183,7 @@ pub fn main() {
         {
             //if M is pressed change shininess
             if input_handler.keys.M == true {
-                model_manager.import_model("cube", "data/cube.obj",
+                model_manager.import_model_tobj("cube", "data/cube.obj",
                                             &mut factory, &mut main_color, &mut main_depth,
                                             &mut material_manager.get_material("standart_material"),
                                             g_object::MaterialType::OPAQUE,
