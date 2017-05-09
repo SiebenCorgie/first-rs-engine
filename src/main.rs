@@ -87,7 +87,7 @@ pub fn main() {
                         "/share/Photogrammetry/_FinalModels/Seasons/2016_09_India_Objects/SharpDarkStonePile/Expot/GQ_Textures/SharpDarkStonePile_Base_Diff.png",
                         "/share/Photogrammetry/_FinalModels/Seasons/2016_09_India_Objects/SharpDarkStonePile/Expot/GQ_Textures/SharpDarkStonePile_Base_Rough.png",
                         "/share/Photogrammetry/_FinalModels/Seasons/2016_09_India_Objects/SharpDarkStonePile/Expot/GQ_Textures/SharpDarkStonePile_Base_Nrm.png",
-                        0.5, 0.25, 1.0, 0.1);
+                        0.5, 0.15, 1.0, 0.05);
 
     //Add some lights
     light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -0.5, 1.0),
