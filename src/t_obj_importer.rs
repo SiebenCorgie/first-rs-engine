@@ -71,7 +71,6 @@ impl Importer {
                         [mesh.normals[3 * v], mesh.normals[3 * v + 1], mesh.normals[3 * v + 2]], //Normal
                         [1.0, 1.0, 1.0],//Color (vertex) //currently not supported
                         [1.0, 1.0, 1.0],//Dead Tangent
-                        [1.0, 1.0, 1.0] //dead bitangent
                         ));
 
 
@@ -85,7 +84,6 @@ impl Importer {
                         [0.0, 0.0, 0.0], //Normal
                         [1.0, 1.0, 1.0],//Color (vertex) //currently not supported
                         [1.0, 1.0, 1.0],//Dead Tangent
-                        [1.0, 1.0, 1.0] //dead bitangent
                         ));
                 }
         	}

@@ -22,7 +22,6 @@ gfx_defines!{
         tex_coord: [f32; 2] = "a_TexCoord",
         normal: [f32; 3] = "a_Normal",
         tangent: [f32; 3] = "a_Tangent",
-        bitangent: [f32; 3] = "a_Bitangent",
         color: [f32; 3] = "a_Color",
     }
     constant Locals {
@@ -110,13 +109,12 @@ gfx_defines!{
 
 
 impl Vertex {
-    pub fn new(p: [f32; 3], t: [f32; 2], n: [f32; 3], c: [f32; 3], ta: [f32; 3], bita: [f32; 3]) -> Vertex {
+    pub fn new(p: [f32; 3], t: [f32; 2], n: [f32; 3], ta: [f32; 3], c: [f32; 3]) -> Vertex {
         Vertex {
             pos: [p[0], p[1] , p[2]],
             tex_coord: [t[0], t[1]],
             normal: [n[0], n[1], n[2]],
             tangent: [ta[0], ta[1], ta[2]],
-            bitangent:[bita[0], bita[1], bita[2]],
             color: [c[0], c[1], c[2]],
         }
     }

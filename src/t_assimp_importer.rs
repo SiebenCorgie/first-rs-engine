@@ -64,11 +64,12 @@ impl Importer {
                     let mut bitan: [f32; 3] = [0.0; 3];
                     let mut col: [f32; 3] = [0.0; 3];
 
-                    //Set position
-                    if mesh.has_positions() {
+                    //Set position (has to have positions)
+                    if true {
                         println!("has Pos");
                         pos = mesh.get_vertex(index).unwrap().into();
                     }
+                    //Has to have tex_coords
                     if true {
                         println!("has texcoords");
                         let Vec3: [f32; 3] = mesh.get_texture_coord(0, index).unwrap().into();
@@ -85,8 +86,6 @@ impl Importer {
                         println!("has tangent");
                         tang = mesh.get_tangent(index).unwrap().into();
                         println!("tangent: {}, {}, {}", tang[0], tang[1], tang[2] );
-                        bitan = mesh.get_bitangent(index).unwrap().into();
-                        println!("bitangent: {}, {}, {}", bitan[0], bitan[1], bitan[2] );
                     }
 
                     if mesh.has_vertex_colors(index as usize){
@@ -94,7 +93,7 @@ impl Importer {
                         col = mesh.get_tangent(index).unwrap().into();
                     }
 
-                    object_vertex.push(g_object::Vertex::new(pos, tex, norm, tang, bitan, col));
+                    object_vertex.push(g_object::Vertex::new(pos, tex, norm, tang, col));
 
                 }
 

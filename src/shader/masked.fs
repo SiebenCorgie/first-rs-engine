@@ -17,6 +17,8 @@ uniform sampler2D t_Specular;
 
 in vec3 FragPos;
 in vec3 Normal;
+in mat3 TBN;
+
 
 
 struct DirectionalLight {
@@ -96,8 +98,10 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main() {
 
-  // Properties
-  vec3 norm = normalize(Normal);
+  vec3 normal = texture(t_Normal, v_TexCoord).rgb;
+  normal = normalize(normal * 2.0 - 1.0);
+  vec3 norm = normalize(TBN * normal);
+  
   vec3 viewDir = normalize(c_viewPos.xyz - FragPos);
 
 

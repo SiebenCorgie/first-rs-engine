@@ -97,10 +97,7 @@ void main() {
   // Properties
   vec3 normal = texture(t_Normal, v_TexCoord).rgb;
   normal = normalize(normal * 2.0 - 1.0);
-  normal = normalize(TBN * normal);
-  //normal.rg = normal.rg + Normal.rg;
-
-  vec3 norm = normalize(Normal);
+  vec3 norm = normalize(TBN * normal);
   vec3 viewDir = normalize(c_viewPos.xyz - FragPos);
 
 
