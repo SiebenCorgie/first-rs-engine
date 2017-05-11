@@ -108,8 +108,8 @@ impl Light_Spot {
         Light_Spot{ s_lightPos: position.extend(1.0).into(),
                     s_lightDirection: direction.extend(1.0).into(),
                     s_lightColor: color.extend(1.0).into(),
-                    s_cutOff: cut_off,
-                    s_outerCutOff: outerCutOff,
+                    s_cutOff: to_radians(cut_off).cos(),
+                    s_outerCutOff: to_radians(outerCutOff).cos(),
                     s_constant: constant,
                     s_linear: linear,
                     s_quadratic: quadratic,}
@@ -146,4 +146,10 @@ impl Light_Spot {
         self.s_quadratic = new;
     }
 
+}
+
+fn to_radians(degree: f32) -> f32 {
+
+    use std;
+    degree * (std::f64::consts::PI / 180.0) as f32
 }

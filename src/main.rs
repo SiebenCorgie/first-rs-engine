@@ -1,4 +1,6 @@
 
+extern crate first_engine;
+
 extern crate time;
 extern crate image;
 extern crate cgmath;
@@ -41,6 +43,8 @@ const PI: f32 = 3.141592653589793238;
 
 pub fn main() {
 
+    first_engine::create_app(32,64);
+
     let (dim_x, dim_y) = (1920, 1080);
 
     let builder = glutin::WindowBuilder::new()
@@ -80,13 +84,13 @@ pub fn main() {
     material_manager.add("Scan",
                         "data/Textures/fallback_diff.png",
                         "data/Textures/fallback_spec.png",
-                        "data/normal.png",
+                        "data/Textures/fallback_nrm.png",
                         0.1, 64.0, 0.8, 1.0);
 
     material_manager.add("gras_mat",
-                        "/share/Photogrammetry/_FinalModels/Seasons/2016_09_India_Objects/SharpDarkStonePile/Expot/GQ_Textures/SharpDarkStonePile_Base_Diff.png",
-                        "/share/Photogrammetry/_FinalModels/Seasons/2016_09_India_Objects/SharpDarkStonePile/Expot/GQ_Textures/SharpDarkStonePile_Base_Rough.png",
-                        "/share/Photogrammetry/_FinalModels/Seasons/2016_09_India_Objects/SharpDarkStonePile/Expot/GQ_Textures/SharpDarkStonePile_Base_Nrm.png",
+                        "/share/3DFiles/TextureLibary/Gras/Grasplades/Grass_R_02.png",
+                        "/share/3DFiles/TextureLibary/Gras/Grasplades/Grass_R_02.png",
+                        "/share/3DFiles/TextureLibary/Gras/Grasplades/WaveGras_01_nrm.png",
                         0.5, 0.15, 1.0, 0.05);
 
     //Add some lights
@@ -116,9 +120,9 @@ pub fn main() {
 
 
 
-    //light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
-    //                            Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), to_radians(12.5).cos(), to_radians(17.5).cos(),
-    //                            0.09, 0.032, 1.0));
+    light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
+                                Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), 12.5, 17.5,
+                                0.09, 0.032, 1.0));
 
                                 /*
     model_manager.import_model_assimp("sphere", "data/gras.obj", &mut factory,
@@ -127,16 +131,23 @@ pub fn main() {
                                 g_object::MaterialType::MASKED,
                                 &light_manager);
                                 */
-    model_manager.import_model_assimp("Stupa", "/share/Photogrammetry/_FinalModels/Seasons/2016_09_India_Objects/SharpDarkStonePile/Expot/SharpDarkStonePileBASE_FBX.fbx", &mut factory,
+    model_manager.import_model_assimp("cube", "data/cube.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
-                                &mut material_manager.get_material("gras_mat"),
+                                &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
-
+    /*
+    model_manager.import_model_assimp("gras", "data/gras.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("gras_mat"),
+                                g_object::MaterialType::MASKED,
+                                &light_manager);
+*/
     model_manager.print_scene();
 
 
     'main: loop {
+        first_engine::create_app(32, 64);
         //Update time / physics
         time_handler.update();
 
@@ -195,8 +206,8 @@ pub fn main() {
         //DO Transform
         let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 1.0, 50.0).into();
 
-        //light_manager.get_spot_light("Spot").unwrap().set_direction(-camera.get_direction());
-        //light_manager.get_spot_light("Spot").unwrap().set_position(camera.get_position());
+        light_manager.get_spot_light("Spot").unwrap().set_direction(-camera.get_direction());
+        light_manager.get_spot_light("Spot").unwrap().set_position(camera.get_position());
 
 
         model_manager.render(&mut encoder, &camera, proj, &mut light_manager);
@@ -210,9 +221,4 @@ pub fn main() {
         println!("FPS: {}", 1.0 / time_handler.delta_time());
 
     }
-}
-
-
-fn to_radians(degree: f32) -> f32 {
-    degree * (std::f64::consts::PI / 180.0) as f32
 }
