@@ -37,10 +37,17 @@ impl Importer {
 
         for mesh in scene.mesh_iter() {
 
-            //get name from path
-            let name = Path::new(path).file_stem().unwrap().to_str().unwrap();
+            let mut name = String::from("No_Name");
 
-            object_name.push(String::from(name));
+            //get name from path
+            let name_1 = Path::new(path).file_stem();
+            match name_1 {
+                Some(x) => name = String::from(x.to_str().unwrap()),
+                None => {},
+            }
+
+
+            object_name.push(String::from(name.clone()));
             println!("{:?}", (String::from(name)));
 
 
