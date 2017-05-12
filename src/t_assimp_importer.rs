@@ -37,6 +37,7 @@ impl Importer {
 
         for mesh in scene.mesh_iter() {
 
+            println!("Adding: ");
             let mut name = String::from("No_Name");
 
             //get name from path
