@@ -115,6 +115,7 @@ impl Importer {
                 index_pile.push(object_indices);
             }
 
+        println!("Finished adding!");
         (object_pile, index_pile, object_name)
     }
 }
