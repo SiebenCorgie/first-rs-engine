@@ -42,8 +42,13 @@ impl Importer {
 
             //get name from path
             let name_1 = Path::new(path).file_stem();
+            let mut name2: Option<&str> = Some(&"No Content");
             match name_1 {
-                Some(x) => name = String::from(x.to_str().unwrap()),
+                Some(x) => name2 = x.to_str(),
+                None => {},
+            }
+            match name2 {
+                Some(y) => name = y.to_string(),
                 None => {},
             }
 
