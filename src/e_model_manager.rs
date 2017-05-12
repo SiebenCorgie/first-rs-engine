@@ -140,55 +140,59 @@ impl<R: gfx::Resources> ModelManager<R> {
 
         }
 
-        //Render
+        //Render each (active) model
         for (name, model) in &self.models {
 
-            //Transform
-            let locals = g_object::Locals { transform: Matrix4::from_translation(model.world_location).into(),
-                                            projection: projection,
-                                            view: camera.return_view_matrix()
-                                        };
+            //Process only active models
+            if model.is_active{
+                //Transform
+                let locals = g_object::Locals { transform: Matrix4::from_translation(model.world_location).into(),
+                                                projection: projection,
+                                                view: camera.return_view_matrix()
+                                            };
 
-            //Changed the max settings to the currently in use lights
-            let light_info_pass = g_object::Light_Info {max_dir_lights: active_dir_slots,
-                                                        max_spot_lights: active_spot_slots,
-                                                        max_point_lights: active_point_slots};
-
-
-            /* BU
-            let light_info_pass = g_object::Light_Info {max_dir_lights: light_manager.light_settings.max_dir_lights as i32,
-                                                        max_spot_lights: light_manager.light_settings.max_spot_lights as i32,
-                                                        max_point_lights: light_manager.light_settings.max_point_lights as i32};
-            */
+                //Changed the max settings to the currently in use lights
+                let light_info_pass = g_object::Light_Info {max_dir_lights: active_dir_slots,
+                                                            max_spot_lights: active_spot_slots,
+                                                            max_point_lights: active_point_slots};
 
 
-
-            encoder.update_buffer(&model.data.dir_light, &current_dir_lights[..], 0);
-            encoder.update_buffer(&model.data.spot_light, &current_spot_lights[..], 0);
-            encoder.update_buffer(&model.data.point_light, &current_point_lights[..], 0);
-
-            //Material Properties
-            let material = g_object::Material { shininess: model.material.shininess,
-                                                ambient: model.material.ambient,
-                                                diffuse_intensity: model.material.diffuse_intensity,
-                                                specular: model.material.specular_instensity};
-
-            //Camera
-            let camera = g_object::Camera { viewPos: camera.cameraPos.extend(1.0).into()};
+                /* BU
+                let light_info_pass = g_object::Light_Info {max_dir_lights: light_manager.light_settings.max_dir_lights as i32,
+                                                            max_spot_lights: light_manager.light_settings.max_spot_lights as i32,
+                                                            max_point_lights: light_manager.light_settings.max_point_lights as i32};
+                */
 
 
-            encoder.update_constant_buffer(&model.data.locals, &locals);
 
-            encoder.update_constant_buffer(&model.data.light_info, &light_info_pass);
+                encoder.update_buffer(&model.data.dir_light, &current_dir_lights[..], 0);
+                encoder.update_buffer(&model.data.spot_light, &current_spot_lights[..], 0);
+                encoder.update_buffer(&model.data.point_light, &current_point_lights[..], 0);
 
-            encoder.update_constant_buffer(&model.data.material, &material);
+                //Material Properties
+                let material = g_object::Material { shininess: model.material.shininess,
+                                                    ambient: model.material.ambient,
+                                                    diffuse_intensity: model.material.diffuse_intensity,
+                                                    specular: model.material.specular_instensity};
 
-            encoder.update_constant_buffer(&model.data.camera, &camera);
+                //Camera
+                let camera = g_object::Camera { viewPos: camera.cameraPos.extend(1.0).into()};
 
-            encoder.draw(&model.slices, &model.pso, &model.data);
+
+                encoder.update_constant_buffer(&model.data.locals, &locals);
+
+                encoder.update_constant_buffer(&model.data.light_info, &light_info_pass);
+
+                encoder.update_constant_buffer(&model.data.material, &material);
+
+                encoder.update_constant_buffer(&model.data.camera, &camera);
+
+                encoder.draw(&model.slices, &model.pso, &model.data);
+            }
         }
     }
 
+    //Import a model via the tobj importer (deprecated)
     pub fn import_model_tobj<F> (&mut self, name: &str, path: &str,
                         factory: &mut F,
                         main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
@@ -211,6 +215,7 @@ impl<R: gfx::Resources> ModelManager<R> {
         }
     }
 
+    //import a model via the assimp importer (supported)
     pub fn import_model_assimp<F> (&mut self, name: &str, path: &str,
                         factory: &mut F,
                         main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
@@ -233,12 +238,14 @@ impl<R: gfx::Resources> ModelManager<R> {
     }
 
 
+    //Print all objects in the scene
     pub fn print_scene(&self){
         for (name, model) in &self.models {
             println!("Name: {}", name);
         }
     }
 
+    //Get a model by name from the model manager. Returns a mutable reference to this object.
     pub fn get_model(&mut self, name: &str) -> &mut g_object::Object<R> {
 
         let give_back = self.models.get_mut(&String::from(name));
@@ -248,6 +255,7 @@ impl<R: gfx::Resources> ModelManager<R> {
         result
     }
 
+    //Tests if a model (by name) is in the manager
     pub fn is_in_manager(&mut self, name: &str) -> bool {
         let give_back = self.models.get_mut(&String::from(name));
 

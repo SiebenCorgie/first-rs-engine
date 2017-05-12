@@ -138,6 +138,8 @@ pub struct Object<R: gfx::Resources> {
     //Material
     pub material: e_material::Material,
     pub material_type: MaterialType,
+
+    pub is_active: bool,
 }
 
 
@@ -227,6 +229,8 @@ impl<R: gfx::Resources> Object <R> {
 
                 material_type: material_type,
                 material: i_material,
+
+                is_active: true,
             }
     }
 
@@ -251,6 +255,37 @@ impl<R: gfx::Resources> Object <R> {
                                             self.world_location.z + add_ammount.z);
     }
 
+
+    pub fn set_world_rotation(&mut self, new: Matrix3<f32>){
+        self.world_rotation = new;
+    }
+
+    pub fn add_world_rotation(&mut self, new: Matrix3<f32>){
+        self.world_rotation = self.world_rotation + new;
+    }
+
+
+    pub fn set_world_scale(&mut self, new: Vector3<f32>){
+        self.world_scale = new;
+    }
+
+    pub fn add_world_scale(&mut self, new: Vector3<f32>){
+        self.world_scale = self.world_scale + new;
+    }
+
+
+//Render option
+    pub fn set_active(&mut self, new: bool){
+        self.is_active = new;
+    }
+
+    pub fn get_active(&mut self) -> bool {
+        if self.is_active{
+            true
+        }else {
+            false
+        }
+    }
 
 }
 

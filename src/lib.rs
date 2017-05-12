@@ -1,6 +1,5 @@
 
-//Import all the crates and mods
-//Should get some helper functions to build the environmant
+//Engine Crate
 
 extern crate time;
 extern crate image;
@@ -25,19 +24,14 @@ use cgmath::*;
 pub type ColorFormat = gfx::format::Rgba8;
 pub type DepthFormat = gfx::format::DepthStencil;
 
-mod g_object;
-mod e_input;
-mod e_time;
-mod g_camera;
-mod e_model_manager;
-mod t_obj_importer;
-mod e_material;
-mod e_material_manager;
-mod e_light;
-mod e_lights_manager;
-mod t_assimp_importer;
-
-
-pub fn create_app(win_x: i32, win_y: i32){
-    println!("Teddy");
-}
+pub mod g_object;
+pub mod e_input;
+pub mod e_time;
+pub mod g_camera;
+pub mod e_model_manager;
+pub mod t_obj_importer;
+pub mod e_material;
+pub mod e_material_manager;
+pub mod e_light;
+pub mod e_lights_manager;
+pub mod t_assimp_importer;

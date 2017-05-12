@@ -12,7 +12,7 @@ pub struct Material {
     pub specular_instensity: f32,
 }
 
-
+//load a texture with the image crate in rgba style
 fn gfx_load_texture<F, R>(factory: &mut F, path: &str) -> gfx::handle::ShaderResourceView<R, [f32; 4]>
     where F: gfx::Factory<R>,
           R: gfx::Resources,

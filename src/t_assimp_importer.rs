@@ -1,3 +1,6 @@
+
+use std::path::Path;
+
 use assimp;
 use g_object;
 //A new assimp importer for more modesl and tangent sapce/ bitangent space import
@@ -19,12 +22,6 @@ impl Importer {
         //load (assimp)
         let mut importer = assimp::Importer::new();
 
-        //Setup importer
-
-        let mut tangent_space_importer = assimp::import::structs::CalcTangentSpace{
-            enable: true,
-            max_smoothing_angle: 90.0,
-            texture_channel: 0,};
 
         importer.calc_tangent_space(|x| x.enable = true);
         //might need this importer.flip_uvs(true);
@@ -32,23 +29,22 @@ impl Importer {
         importer.generate_normals(|x| x.enable = true);
         importer.pre_transform_vertices(|x| {
             x.enable = true;
-            x.normalize = true
+            x.normalize = true;
         });
 
         //Import scene with all meshes
-        let scene = importer.read_file(path).unwrap();
-
-        let mut counter = 0;
+        let scene = importer.read_file(path.clone()).unwrap();
 
         for mesh in scene.mesh_iter() {
 
-            object_name.push(String::from("Mesh_ASSIMP_ ") + &counter.to_string());
-            println!("{:?}", (String::from("Mesh_ASSIMP_ ") + &counter.to_string()));
-            counter += 1;
+            //get name from path
+            let name = Path::new(path).file_stem().unwrap().to_str().unwrap();
+
+            object_name.push(String::from(name));
+            println!("{:?}", (String::from(name)));
 
 
             let mut object_vertex: Vec<g_object::Vertex> = Vec::new();
-            let mut object_indices: Vec<u32> = Vec::new();
 
 
 
@@ -61,7 +57,6 @@ impl Importer {
                     let mut tex: [f32; 2] = [0.0; 2];
                     let mut norm: [f32; 3] = [0.0; 3];
                     let mut tang: [f32; 3] = [0.0; 3];
-                    let mut bitan: [f32; 3] = [0.0; 3];
                     let mut col: [f32; 3] = [0.0; 3];
 
                     //Set position (has to have positions)

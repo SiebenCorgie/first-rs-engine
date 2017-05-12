@@ -1,6 +1,7 @@
 use glutin;
 
-
+//keys struc (not finished for all keys) contains all pressed keys as well
+//as mouse movement
 pub struct InputMap {
     pub A: bool,
     pub W: bool,
@@ -25,13 +26,14 @@ pub struct InputMap {
 
 
 }
-
+//The Input system struct containing a keys struct with all, currently pressed keys
 pub struct InputSystem {
     pub keys: InputMap,
 }
 
 
 impl InputSystem {
+    //Creates a new input handler, no keys pressed
     pub fn new() -> Self {
 
 
@@ -48,6 +50,7 @@ impl InputSystem {
         InputSystem {keys: keys}
     }
 
+    //Checks all key and mouse states and puts them in "keys"
     pub fn process_events(&mut self, window: &glutin::Window) -> bool {
         //Processes Input and stores it in the keymap struct
         //returns true if should close

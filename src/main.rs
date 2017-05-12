@@ -1,49 +1,40 @@
 
-extern crate first_engine;
+//An Example file how you can use the "first_engine"
+//crate for your own project
 
-extern crate time;
-extern crate image;
+//The steps are
+//1. window creation
+//2. handler creation (these are usually the same as shown here)
+//3. beginning the main loop
+// 3.1 processing input, time and camera(s)
+// 3.2 do custom stuff on input
+// 3.3 render
+
+//You can add and remove materials and objects at any point
+
+
+#![allow(non_snake_case)]
+//Setter
+extern crate first_engine;
 extern crate cgmath;
 #[macro_use]
 extern crate gfx;
-extern crate gfx_window_glutin;
-extern crate tobj;
 extern crate glutin;
 extern crate gfx_device_gl;
-extern crate assimp;
+extern crate gfx_window_glutin;
 
 use gfx::*;
-
-use std::time::{Instant};
-use std::path::Path;
-
-
+use first_engine::*;
 use cgmath::*;
 
 
 pub type ColorFormat = gfx::format::Rgba8;
 pub type DepthFormat = gfx::format::DepthStencil;
 
-mod g_object;
-mod e_input;
-mod e_time;
-mod g_camera;
-mod e_model_manager;
-mod t_obj_importer;
-mod e_material;
-mod e_material_manager;
-mod e_light;
-mod e_lights_manager;
-mod t_assimp_importer;
-
-const CLEAR_COLOR: [f32; 4] = [0.5, 0.5, 1.0, 1.0];
-const PI: f32 = 3.141592653589793238;
 
 
 
 pub fn main() {
-
-    first_engine::create_app(32,64);
 
     let (dim_x, dim_y) = (1920, 1080);
 
@@ -54,7 +45,7 @@ pub fn main() {
     let (window, mut device, mut factory, mut main_color, mut main_depth) =
         gfx_window_glutin::init::<ColorFormat, DepthFormat>(builder);
 
-    window.set_cursor_state(glutin::CursorState::Hide);
+    let _ = window.set_cursor_state(glutin::CursorState::Hide);
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
@@ -136,18 +127,17 @@ pub fn main() {
                                 &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
-    /*
+
     model_manager.import_model_assimp("gras", "data/gras.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("gras_mat"),
                                 g_object::MaterialType::MASKED,
                                 &light_manager);
-*/
+
     model_manager.print_scene();
 
 
     'main: loop {
-        first_engine::create_app(32, 64);
         //Update time / physics
         time_handler.update();
 
@@ -160,41 +150,39 @@ pub fn main() {
 
         let delta_time: f32 = time_handler.delta_time();
 
-        //Corrected Camera Speed
-        let camera_speed = 10.0 * delta_time;
 
         //Input processing [extra]
         {
             //if M is pressed change shininess
             if input_handler.keys.M == true {
-                model_manager.import_model_tobj("cube", "data/cube.obj",
-                                            &mut factory, &mut main_color, &mut main_depth,
-                                            &mut material_manager.get_material("standart_material"),
-                                            g_object::MaterialType::OPAQUE,
-                                            &light_manager);
+                if model_manager.get_model("gras_gras").get_active(){
+                    model_manager.get_model("gras_gras").set_active(false);
+                }else{
+                    model_manager.get_model("gras_gras").set_active(true);
+                }
             }
             if input_handler.keys.C{
                 model_manager.print_scene();
             }
-            if input_handler.keys.Arrow_Down & model_manager.is_in_manager("cube_Cube_Cube.001"){
+            if input_handler.keys.Arrow_Down & model_manager.is_in_manager("gras_gras"){
 
                 let speed = 10.0 * time_handler.delta_time();
-                model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(0.0, -speed, 0.0));
+                model_manager.get_model("gras_gras").add_world_location(Vector3::new(0.0, -speed, 0.0));
             }
-            if input_handler.keys.Arrow_Up & model_manager.is_in_manager("cube_Cube_Cube.001"){
+            if input_handler.keys.Arrow_Up & model_manager.is_in_manager("gras_gras"){
 
                 let speed = 10.0 * time_handler.delta_time();
-                model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(0.0, speed, 0.0));
+                model_manager.get_model("gras_gras").add_world_location(Vector3::new(0.0, speed, 0.0));
             }
-            if input_handler.keys.Arrow_Left & model_manager.is_in_manager("cube_Cube_Cube.001"){
+            if input_handler.keys.Arrow_Left & model_manager.is_in_manager("gras_gras"){
 
                 let speed = 10.0 * time_handler.delta_time();
-                model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(-speed, 0.0, 0.0));
+                model_manager.get_model("gras_gras").add_world_location(Vector3::new(-speed, 0.0, 0.0));
             }
-            if input_handler.keys.Arrow_Right & model_manager.is_in_manager("cube_Cube_Cube.001"){
+            if input_handler.keys.Arrow_Right & model_manager.is_in_manager("gras_gras"){
 
                 let speed = 10.0 * time_handler.delta_time();
-                model_manager.get_model("cube_Cube_Cube.001").add_world_location(Vector3::new(speed, 0.0, 0.0));
+                model_manager.get_model("gras_gras").add_world_location(Vector3::new(speed, 0.0, 0.0));
             }
             if input_handler.keys.Arrow_Down {
                 //light_manager.get_point_light("Point3").unwrap().set_position(Vector3::new(0.0, -150.0, 0.0));

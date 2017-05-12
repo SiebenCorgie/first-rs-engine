@@ -1,7 +1,7 @@
 ///Camera object used to create the "view" propertie of shaders
+// Easly to be rewritten for custom cameras
 
 use cgmath::*;
-
 use e_input;
 use e_time;
 use glutin::Window;
