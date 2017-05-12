@@ -15,7 +15,7 @@
 
 #![allow(non_snake_case)]
 //Setter
-extern crate first_engine;
+extern crate first_rs_engine;
 extern crate cgmath;
 #[macro_use]
 extern crate gfx;
@@ -24,7 +24,7 @@ extern crate gfx_device_gl;
 extern crate gfx_window_glutin;
 
 use gfx::*;
-use first_engine::*;
+use first_rs_engine::*;
 use cgmath::*;
 
 
