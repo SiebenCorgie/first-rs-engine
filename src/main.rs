@@ -38,12 +38,16 @@ pub fn main() {
 
     let (dim_x, dim_y) = (1920, 1080);
 
+
+    //Changing to new glutin
+
+    let events_loop = glutin::EventsLoop::new();
     let builder = glutin::WindowBuilder::new()
         .with_title("Triangle example".to_string())
         .with_dimensions(dim_x, dim_y)
         .with_vsync();
     let (window, mut device, mut factory, mut main_color, mut main_depth) =
-        gfx_window_glutin::init::<ColorFormat, DepthFormat>(builder);
+        gfx_window_glutin::init::<ColorFormat, DepthFormat>(builder, &events_loop);
 
     let _ = window.set_cursor_state(glutin::CursorState::Hide);
 
@@ -143,7 +147,7 @@ pub fn main() {
 
 
         //Breaks main loop if got event from input handler
-        if input_handler.process_events(&window) {break 'main};
+        if input_handler.process_events(&window, &events_loop) {break 'main};
 
         //Process camera/ updated all camera vectors
         camera.calc_view(&input_handler, &mut time_handler);
@@ -206,7 +210,7 @@ pub fn main() {
         window.swap_buffers().unwrap();
         device.cleanup();
 
-        println!("FPS: {}", 1.0 / time_handler.delta_time());
+        //println!("FPS: {}", 1.0 / time_handler.delta_time());
 
     }
 }

@@ -15,10 +15,6 @@ pub struct Camera {
     //Camera Rotation
     yaw: f32,
     pitch: f32,
-
-    //if its the first frame, skip rotation because
-    //Arrow just got caputered
-    first_frame: bool,
 }
 
 
@@ -32,7 +28,7 @@ impl Camera {
         let yaw: f32 = 0.0;
         let pitch: f32 = 0.0;
 
-        Camera {cameraPos: cameraPos, cameraFront: cameraFront, cameraUp: cameraUp, yaw: yaw, pitch: pitch, first_frame: true}
+        Camera {cameraPos: cameraPos, cameraFront: cameraFront, cameraUp: cameraUp, yaw: yaw, pitch: pitch,}
     }
 
     pub fn calc_view(&mut self, input_handler: &e_input::InputSystem, time_handler: &mut e_time::Time){
@@ -64,53 +60,34 @@ impl Camera {
             if (input_handler.keys.SHIFT_L == true) | (input_handler.keys.E == true) {
                 self.cameraPos = self.cameraPos + Vector3::new(0.0, camera_speed, 0.0);
             }
-            //No Curser adjustion
-
-            //println!("Delta X: {}", input_handler.keys.Delta_x);
-            //println!("Delta Y: {}", input_handler.keys.Delta_y);
 
 
         }
 
-        if self.first_frame != true {
-            let mut x_offset = 0.0;
-            let mut y_offset = 0.0;
+        let sensitivity = 10.0;
 
-            //Still have to fix camera jittering :/
-            let kill_ammount = 2;
+        //Fixed camera gittering by slowing down so one integer delta = movement of
+        // delta * sensitvity * time_delta * slowdown (virtual speed up)
+        let virtual_speedup = 0.25;
+        let x_offset: f32 = input_handler.keys.Delta_x as f32 * sensitivity * time_handler.delta_time() * virtual_speedup;
+        let y_offset: f32 = input_handler.keys.Delta_y as f32 * sensitivity * time_handler.delta_time() * virtual_speedup;
 
+        self.yaw += x_offset;
+        self.pitch += y_offset;
 
-            let sensitivity = 0.05;
-            if (input_handler.keys.Delta_x > kill_ammount) | (input_handler.keys.Delta_x < -kill_ammount) {
-                x_offset = input_handler.keys.Delta_x as f32 * sensitivity;
-            }
-
-
-            if (input_handler.keys.Delta_y > kill_ammount) | (input_handler.keys.Delta_y < -kill_ammount) {
-                y_offset = input_handler.keys.Delta_y as f32 * sensitivity;
-            }
-
-            self.yaw += x_offset;
-            self.pitch += y_offset;
-
-            if self.pitch > 89.0 {
-                self.pitch = 89.0;
-            }
-            if self.pitch < -89.0 {
-                self.pitch = -89.0;
-            }
-
-            let mut front = Vector3::new(0.0, 0.0, 0.0);
-            front.x = to_radians(self.yaw).cos() * to_radians(self.pitch).cos();
-            front.y = to_radians(self.pitch).sin();
-            front.z =  to_radians(self.yaw).sin() * to_radians(self.pitch).cos();
-            self.cameraFront = front.normalize();
+        if self.pitch > 89.0 {
+            self.pitch = 89.0;
         }
-        else{
-            //Skipping the whole roation because of the first frame
-            //Setting to false for next frames
-            self.first_frame = false;
+        if self.pitch < -89.0 {
+            self.pitch = -89.0;
         }
+
+        let mut front = Vector3::new(0.0, 0.0, 0.0);
+        front.x = to_radians(self.yaw).cos() * to_radians(self.pitch).cos();
+        front.y = to_radians(self.pitch).sin();
+        front.z =  to_radians(self.yaw).sin() * to_radians(self.pitch).cos();
+        self.cameraFront = front.normalize();
+
     }
 
     //Return view matrix as [[f32; 4]; 4]
