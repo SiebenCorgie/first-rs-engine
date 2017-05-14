@@ -162,8 +162,6 @@ impl InputSystem {
                     _ => { // Reset mouse movement
                             self.keys.Delta_x = 0;
                             self.keys.Delta_y = 0;
-                            //self.keys.Mouse_x = (win_pos_x + (win_size_x / 2)) as i32;
-                            //self.keys.Mouse_y = (win_pos_y + (win_size_y / 2)) as i32;
                         },
 
 
@@ -172,40 +170,6 @@ impl InputSystem {
             }
         });
 
-        /*
-        //Arrow capturing
-        //getting middle
-        let mut win_pos_x = 0 as i32;
-        let mut win_pos_y = 0 as i32;
-
-        let mut win_size_x = 0 as i32;
-        let mut win_size_y = 0 as i32;
-
-        let win_pos = window.get_position();
-        match win_pos {
-            Some((x,y)) => {    win_pos_x = x as i32;
-                                win_pos_y = y as i32;},
-            _ => {},
-        }
-
-        let win_size = window.get_inner_size();
-        match win_size {
-            Some((x, y)) => {   win_size_x = x as i32;
-                                win_size_y = y as i32;},
-            _ => {},
-        }
-
-        //if C is pressed make it possible to escape the window
-        //Otherwise the curser always gets captured
-        if self.keys.C == false {
-            window.set_cursor_state(glutin::CursorState::Hide);
-
-            let change = window.set_cursor_position((win_pos_x + (win_size_x / 2)), (win_pos_y + (win_size_y / 2)) as i32 );
-        }else {
-            window.set_cursor_state(glutin::CursorState::Normal);
-
-        }
-        */
         //if everything worked return false... shouldn't close
         return_value
     }
