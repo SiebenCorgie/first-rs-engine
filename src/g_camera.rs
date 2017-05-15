@@ -37,7 +37,7 @@ impl Camera {
 
 
         //Corrected Camera Speed
-        let camera_speed = 10.0 * delta_time;
+        let camera_speed = 50.0 * delta_time;
 
         //Input processing
         {

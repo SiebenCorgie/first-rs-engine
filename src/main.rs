@@ -76,10 +76,16 @@ pub fn main() {
                         "data/Textures/fallback_nrm.png",
                         0.1, 64.0, 0.8, 1.0);
 
-    material_manager.add("Scan",
-                        "data/Textures/fallback_diff.png",
-                        "data/Textures/fallback_spec.png",
-                        "data/Textures/fallback_nrm.png",
+    material_manager.add("metal",
+                        "data/Textures/Metal_diff.png",
+                        "data/Textures/Metal_diff.png",
+                        "data/Textures/Metal_nrm.png",
+                        0.1, 64.0, 0.8, 1.0);
+
+    material_manager.add("cube",
+                        "data/Textures/Metal_diff.png",
+                        "data/Textures/Metal_diff.png",
+                        "data/Cube_Nrm.png",
                         0.1, 64.0, 0.8, 1.0);
 
     material_manager.add("gras_mat",
@@ -89,9 +95,9 @@ pub fn main() {
                         0.5, 0.15, 1.0, 0.05);
 
     //Add some lights
-    light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -0.5, 1.0),
-                                        Vector3::new(1.0, 0.95, 0.95), 3.0));
-/*
+    //light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -0.5, 1.0),
+    //                                    Vector3::new(1.0, 0.95, 0.95), 3.0));
+
     light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(2.0, -2.0, 2.0),
                                   Vector3::new(1.0, 0.0, 0.0), 1.0, 0.09, 0.032, 1.0));
 
@@ -110,33 +116,49 @@ pub fn main() {
     light_manager.add_point_light("Point6", e_light::Light_Point::new(Vector3::new(-4.0, -4.0, -4.0),
                                 Vector3::new(1.0, 0.0, 1.0), 1.0, 0.0014, 0.000007, 1.0));
 
-*/
-
-
 
 
     light_manager.add_spot_light("Spot", e_light::Light_Spot::new(Vector3::new(-10.0, 0.0, 0.0),
                                 Vector3::new(1.0, -1.0, 1.0), Vector3::new(1.0, 0.95, 0.95), 12.5, 17.5,
                                 0.09, 0.032, 1.0));
 
-                                /*
-    model_manager.import_model_assimp("sphere", "data/gras.obj", &mut factory,
+
+    model_manager.import_model_assimp("Scene", "data/Cube.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
-                                &mut material_manager.get_material("gras_mat"),
-                                g_object::MaterialType::MASKED,
+                                &mut material_manager.get_material("cube"),
+                                g_object::MaterialType::OPAQUE,
                                 &light_manager);
-                                */
-    model_manager.import_model_assimp("cube", "data/cube.obj", &mut factory,
+    model_manager.import_model_assimp("Scene", "data/Ground.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("standart_material"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+    model_manager.import_model_assimp("Scene", "data/Mat_Stand.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("metal"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+    model_manager.import_model_assimp("Scene", "data/Mat.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("standart_material"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+    model_manager.import_model_assimp("Scene", "data/Monky.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("standart_material"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+    model_manager.import_model_assimp("Scene", "data/Text.obj", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut material_manager.get_material("standart_material"),
+                                g_object::MaterialType::OPAQUE,
+                                &light_manager);
+    model_manager.import_model_assimp("Scene", "data/Torus.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
 
-    model_manager.import_model_assimp("gras", "data/gras.obj", &mut factory,
-                                &mut main_color, &mut main_depth,
-                                &mut material_manager.get_material("gras_mat"),
-                                g_object::MaterialType::MASKED,
-                                &light_manager);
 
     model_manager.print_scene();
 
@@ -196,7 +218,7 @@ pub fn main() {
 
 
         //DO Transform
-        let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 1.0, 50.0).into();
+        let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 0.1, 500.0).into();
 
         light_manager.get_spot_light("Spot").unwrap().set_direction(-camera.get_direction());
         light_manager.get_spot_light("Spot").unwrap().set_position(camera.get_position());
