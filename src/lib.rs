@@ -7,7 +7,6 @@ extern crate cgmath;
 #[macro_use]
 extern crate gfx;
 extern crate gfx_window_glutin;
-extern crate tobj;
 extern crate glutin;
 extern crate gfx_device_gl;
 extern crate assimp;
@@ -24,14 +23,28 @@ use cgmath::*;
 pub type ColorFormat = gfx::format::Rgba8;
 pub type DepthFormat = gfx::format::DepthStencil;
 
+//ENGINE
+//Gameplay
 pub mod g_object;
-pub mod e_input;
-pub mod e_time;
-pub mod g_camera;
 pub mod e_model_manager;
-pub mod t_obj_importer;
-pub mod e_material;
-pub mod e_material_manager;
+pub mod e_input;
+
+//Rendering
 pub mod e_light;
 pub mod e_lights_manager;
+pub mod e_material;
+pub mod e_material_manager;
+
+//_core
+pub mod e_renderer;
+
+//Physic
+pub mod e_time;
+
+//TOOLS
 pub mod t_assimp_importer;
+
+//GAME
+//gameplay
+pub mod g_camera;
+pub use g_camera::*;

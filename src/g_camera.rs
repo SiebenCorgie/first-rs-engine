@@ -1,6 +1,16 @@
 ///Camera object used to create the "view" propertie of shaders
 // Easly to be rewritten for custom cameras
 
+//Camera trait, use this to implement any type of camera
+pub trait CameraTyp {
+    fn new() -> Self;
+    fn calc_view(&mut self, input_handler: &e_input::InputSystem, time_handler: &mut e_time::Time);
+    fn return_view_matrix(&self) -> [[f32; 4]; 4];
+    fn get_direction(&self) -> Vector3<f32>;
+    fn get_position(&self) -> Vector3<f32>;
+}
+
+
 use cgmath::*;
 use e_input;
 use e_time;
@@ -18,8 +28,8 @@ pub struct Camera {
 }
 
 
-impl Camera {
-    pub fn new() -> Self {
+impl CameraTyp for Camera{
+    fn new() -> Self {
         //camera General
         let cameraPos = Vector3::new(0.0, 0.0, 0.0);
         let cameraFront = Vector3::new(0.0, 0.0, -1.0);
@@ -31,7 +41,7 @@ impl Camera {
         Camera {cameraPos: cameraPos, cameraFront: cameraFront, cameraUp: cameraUp, yaw: yaw, pitch: pitch,}
     }
 
-    pub fn calc_view(&mut self, input_handler: &e_input::InputSystem, time_handler: &mut e_time::Time){
+    fn calc_view(&mut self, input_handler: &e_input::InputSystem, time_handler: &mut e_time::Time){
 
         let delta_time: f32 = time_handler.delta_time();
 
@@ -90,7 +100,7 @@ impl Camera {
     }
 
     //Return view matrix as [[f32; 4]; 4]
-    pub fn return_view_matrix(&self) -> [[f32; 4]; 4] {
+    fn return_view_matrix(&self) -> [[f32; 4]; 4] {
 
         let tmp_target = self.cameraPos - self.cameraFront;
         let view =  Matrix4::look_at(
@@ -100,11 +110,11 @@ impl Camera {
                 ).into();
         view
     }
-    pub fn get_direction(&self) -> Vector3<f32> {
+    fn get_direction(&self) -> Vector3<f32> {
         self.cameraFront
     }
 
-    pub fn get_position(&self) -> Vector3<f32> {
+    fn get_position(&self) -> Vector3<f32> {
         self.cameraPos
     }
 }

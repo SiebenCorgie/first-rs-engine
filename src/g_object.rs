@@ -7,7 +7,6 @@ use gfx_window_glutin;
 use gfx::traits::FactoryExt;
 use gfx::*;
 
-use t_obj_importer;
 use e_material;
 use e_lights_manager;
 
@@ -101,6 +100,7 @@ gfx_defines!{
         diffuse_tex: gfx::TextureSampler<[f32; 4]> = "t_Diffuse",
         specular: gfx::TextureSampler<[f32; 4]> = "t_Specular",
         normal: gfx::TextureSampler<[f32; 4]> = "t_Normal",
+
         out_color: gfx::RenderTarget<ColorFormat> = "Target0",
         out_depth: gfx::DepthTarget<DepthFormat> =
             gfx::preset::depth::LESS_EQUAL_WRITE,
@@ -133,7 +133,7 @@ pub struct Object<R: gfx::Resources> {
     pub slices: gfx::Slice<R>,
     //3D Parameters
     pub world_location: Vector3<f32>,
-    pub world_rotation: Matrix3<f32>,
+    pub world_rotation: Basis3<f32>,
     pub world_scale: Vector3<f32>,
     //Material
     pub material: e_material::Material,
@@ -155,8 +155,8 @@ impl<R: gfx::Resources> Object <R> {
     where F: gfx::Factory<R>,
     {
         let w_loc = Vector3::new(0.0, 0.0, 0.0);
-        let w_rot: Matrix3<f32> = Matrix3::from_value(0.0);
-        let w_sca = Vector3::new(0.0, 0.0, 0.0);
+        let w_rot: Basis3<f32> = Basis3::from_angle_x( Rad { s: 0.0 } );
+        let w_sca = Vector3::new(1.0, 1.0, 1.0);
 
         let i_material = material.clone();
 
@@ -256,12 +256,12 @@ impl<R: gfx::Resources> Object <R> {
     }
 
 
-    pub fn set_world_rotation(&mut self, new: Matrix3<f32>){
+    pub fn set_world_rotation(&mut self, new: Basis3<f32>){
         self.world_rotation = new;
     }
 
-    pub fn add_world_rotation(&mut self, new: Matrix3<f32>){
-        self.world_rotation = self.world_rotation + new;
+    pub fn add_world_rotation(&mut self, new: Basis3<f32>){
+        self.world_rotation ;//= self.world_rotation * new;
     }
 
 

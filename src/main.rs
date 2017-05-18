@@ -54,6 +54,9 @@ pub fn main() {
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
 
+    //Renderer
+    let mut renderer: e_renderer::Renderer = e_renderer::Renderer::new();
+
     //Init all managers
     let mut input_handler: e_input::InputSystem = e_input::InputSystem::new();
     let mut time_handler: e_time::Time = e_time::Time::new();
@@ -123,41 +126,45 @@ pub fn main() {
                                 0.09, 0.032, 1.0));
 
 
-    model_manager.import_model_assimp("Scene", "data/Cube.obj", &mut factory,
+    model_manager.import_model_assimp("Cube", "data/Cube.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("cube"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
-    model_manager.import_model_assimp("Scene", "data/Ground.obj", &mut factory,
+    model_manager.import_model_assimp("Ground", "data/Ground.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
-    model_manager.import_model_assimp("Scene", "data/Mat_Stand.obj", &mut factory,
+    model_manager.import_model_assimp("Mat_stand", "data/Mat_Stand.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("metal"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
-    model_manager.import_model_assimp("Scene", "data/Mat.obj", &mut factory,
+    model_manager.import_model_assimp("Mat", "data/Mat.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
-    model_manager.import_model_assimp("Scene", "data/Monky.obj", &mut factory,
+    model_manager.import_model_assimp("Monky", "data/Monky.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
-    model_manager.import_model_assimp("Scene", "data/Text.obj", &mut factory,
+    model_manager.import_model_assimp("Text", "data/Text.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
-    model_manager.import_model_assimp("Scene", "data/Torus.obj", &mut factory,
+    model_manager.import_model_assimp("Torus", "data/Torus.obj", &mut factory,
                                 &mut main_color, &mut main_depth,
                                 &mut material_manager.get_material("standart_material"),
                                 g_object::MaterialType::OPAQUE,
                                 &light_manager);
+
+    model_manager.get_model("Monky_Monky").add_world_location(cgmath::Vector3::new(0.0, 100.0, 0.0));
+    model_manager.get_model("Monky_Monky").set_world_scale(cgmath::Vector3::new(1.0, 1.0, 1.0));
+    //model_manager.get_model("Monky_Monky").set_world_rotation(cgmath::Basis3::from_angle_x(cgmath::Rad { s: 45.0 }));
 
 
     model_manager.print_scene();
@@ -224,8 +231,10 @@ pub fn main() {
         light_manager.get_spot_light("Spot").unwrap().set_position(camera.get_position());
 
 
-        model_manager.render(&mut encoder, &camera, proj, &mut light_manager);
+        //Doing rendering in Renderer now
+        //model_manager.render(&mut encoder, &camera, proj, &mut light_manager);
 
+        renderer.render(&mut encoder, &camera, proj, &mut light_manager, &mut model_manager);
         //Send to gpu
         encoder.flush(&mut device);
         //Swap
