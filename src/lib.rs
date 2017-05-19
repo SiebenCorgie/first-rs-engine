@@ -39,7 +39,7 @@ pub mod e_lights_manager;
 pub mod e_material;
 pub mod e_material_manager;
 pub mod e_scene;
-pub mod e_scene_handler;
+pub mod e_scene_mananger;
 //_core
 pub mod e_renderer;
 
