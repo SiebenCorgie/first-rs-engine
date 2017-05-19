@@ -29,12 +29,17 @@ pub mod g_object;
 pub mod e_model_manager;
 pub mod e_input;
 
+//Misc
+pub mod e_engine_settings;
+
+
 //Rendering
 pub mod e_light;
 pub mod e_lights_manager;
 pub mod e_material;
 pub mod e_material_manager;
-
+pub mod e_scene;
+pub mod e_scene_handler;
 //_core
 pub mod e_renderer;
 

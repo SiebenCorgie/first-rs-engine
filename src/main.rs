@@ -36,15 +36,15 @@ pub type DepthFormat = gfx::format::DepthStencil;
 
 pub fn main() {
 
-    let (dim_x, dim_y) = (1920, 1080);
-
+    let settings = e_engine_settings::EngineSettings::new().with_name("Test Window").with_light_counts(1, 1, 6)
+    .with_dimensions(1920, 1080);
 
     //Changing to new glutin
 
     let events_loop = glutin::EventsLoop::new();
     let builder = glutin::WindowBuilder::new()
-        .with_title("Triangle example".to_string())
-        .with_dimensions(dim_x, dim_y)
+        .with_title(settings.name.clone())
+        .with_dimensions(settings.width.clone(), settings.height.clone())
         .with_vsync();
     let (window, mut device, mut factory, mut main_color, mut main_depth) =
         gfx_window_glutin::init::<ColorFormat, DepthFormat>(builder, &events_loop);
@@ -61,6 +61,7 @@ pub fn main() {
     let mut input_handler: e_input::InputSystem = e_input::InputSystem::new();
     let mut time_handler: e_time::Time = e_time::Time::new();
     let mut camera: g_camera::Camera = g_camera::Camera::new();
+    camera.set_frustum_planes(0.1, 500.0);
     let mut material_manager: e_material_manager::MaterialManager = e_material_manager::MaterialManager::new();
     let mut light_manager: e_lights_manager::LightManager = e_lights_manager::LightManager::new(1, 1, 6);
     let mut model_manager: e_model_manager::ModelManager<gfx_device_gl::Resources> = e_model_manager::ModelManager::new();
@@ -225,7 +226,7 @@ pub fn main() {
 
 
         //DO Transform
-        let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 0.1, 500.0).into();
+        //let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 0.1, 500.0).into();
 
         light_manager.get_spot_light("Spot").unwrap().set_direction(-camera.get_direction());
         light_manager.get_spot_light("Spot").unwrap().set_position(camera.get_position());
@@ -234,7 +235,7 @@ pub fn main() {
         //Doing rendering in Renderer now
         //model_manager.render(&mut encoder, &camera, proj, &mut light_manager);
 
-        renderer.render(&mut encoder, &camera, proj, &mut light_manager, &mut model_manager);
+        renderer.render(&mut encoder, &camera, camera.get_perspective(&settings), &mut light_manager, &mut model_manager);
         //Send to gpu
         encoder.flush(&mut device);
         //Swap

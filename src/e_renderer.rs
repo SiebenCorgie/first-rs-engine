@@ -14,6 +14,7 @@ use e_light;
 use e_lights_manager;
 
 
+
 //Defs
 const CLEAR_COLOR: [f32; 4] = [0.05, 0.05, 0.1, 1.0];
 
@@ -177,4 +178,5 @@ impl Renderer {
             }
         }
     }
+
 }

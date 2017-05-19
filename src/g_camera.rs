@@ -1,13 +1,25 @@
 ///Camera object used to create the "view" propertie of shaders
 // Easly to be rewritten for custom cameras
+use e_engine_settings;
 
 //Camera trait, use this to implement any type of camera
 pub trait CameraTyp {
+    //Creates a default camera
     fn new() -> Self;
+    //Calculates / Update the view
     fn calc_view(&mut self, input_handler: &e_input::InputSystem, time_handler: &mut e_time::Time);
+    //Returns the view matrix if needed
     fn return_view_matrix(&self) -> [[f32; 4]; 4];
+    //Returns the current direction of the camera
     fn get_direction(&self) -> Vector3<f32>;
+    //Returns Position
     fn get_position(&self) -> Vector3<f32>;
+    //Sets Fov on this camera
+    fn set_fov(&mut self, new_fov: f32);
+    //Sets the far, and near planes of the frustum
+    fn set_frustum_planes(&mut self, near: f32, far: f32);
+    //Returns the perspective matrix based on the window settings
+    fn get_perspective(&self, engine_settings: &e_engine_settings::EngineSettings) -> [[f32;4]; 4];
 }
 
 
@@ -25,6 +37,11 @@ pub struct Camera {
     //Camera Rotation
     yaw: f32,
     pitch: f32,
+
+    //Setting
+    fov: f32,
+    near_plane: f32,
+    far_plane: f32,
 }
 
 
@@ -38,7 +55,13 @@ impl CameraTyp for Camera{
         let yaw: f32 = 0.0;
         let pitch: f32 = 0.0;
 
-        Camera {cameraPos: cameraPos, cameraFront: cameraFront, cameraUp: cameraUp, yaw: yaw, pitch: pitch,}
+        let fov = 45.0;
+        let near_plane = 0.1;
+        let far_plane = 100.0;
+
+        Camera {cameraPos: cameraPos, cameraFront: cameraFront,
+            cameraUp: cameraUp, yaw: yaw, pitch: pitch,
+            fov: fov, near_plane: near_plane, far_plane: far_plane}
     }
 
     fn calc_view(&mut self, input_handler: &e_input::InputSystem, time_handler: &mut e_time::Time){
@@ -116,6 +139,22 @@ impl CameraTyp for Camera{
 
     fn get_position(&self) -> Vector3<f32> {
         self.cameraPos
+    }
+
+    fn set_fov(&mut self, new_fov: f32){
+        self.fov = new_fov;
+    }
+    fn set_frustum_planes(&mut self, near: f32, far: f32) {
+        self.far_plane = far;
+        self.near_plane = near;
+    }
+
+    //Calculates the perspective based on the engine and camera settings
+    fn get_perspective(&self, engine_settings: &e_engine_settings::EngineSettings) -> [[f32;4]; 4]{
+
+        perspective(deg(self.fov),
+        (engine_settings.width as f32 / engine_settings.height as f32),
+        self.near_plane, self.far_plane).into()
     }
 }
 
