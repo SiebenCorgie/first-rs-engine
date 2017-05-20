@@ -151,10 +151,6 @@ impl InputSystem {
                     //Mouse input
                     glutin::WindowEvent::MouseMoved(x_dir, y_dir) => {  self.keys.Delta_x = x_dir - self.keys.Mouse_x;
                                                                         self.keys.Delta_y = y_dir -self.keys.Mouse_y;
-
-                                                                        //self.keys.Mouse_x = x_dir;
-                                                                        //self.keys.Mouse_y = y_dir;
-                                                                        println!("Mouse: {} / {}", self.keys.Delta_x, self.keys.Delta_y);
                                                                 },
 
                     glutin::WindowEvent::Closed => return_value = true,

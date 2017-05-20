@@ -67,9 +67,9 @@ impl<R: gfx::Resources> ModelManager<R> {
 
     //Print all objects in the scene
     pub fn print_scene(&self){
+        println!("Scene:");
         for (name, model) in &self.models {
-            println!("Scene:");
-            println!("Name: {}", name);
+            println!("Object: {}", name);
         }
     }
 

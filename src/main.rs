@@ -62,10 +62,43 @@ pub fn main() {
     let mut scene_manager: e_scene_mananger::SceneManger<gfx_device_gl::Resources> = e_scene_mananger::SceneManger::new(&settings);
     scene_manager.add("MyScene", &settings);
     //Get reference to creted scene
+
+    {
+    scene_manager.add("LoadingScreen", &settings);
+    let loading_screen = scene_manager.get_scene("LoadingScreen");
+
+    //Setup_LoadingScreen
+    loading_screen.material_manager.add("Text_mat", "data/Textures/Loading_Screen.png",
+                                        "data/Textures/Loading_Screen.png",
+                                        "data/Textures/Loading_Screen.png",
+                                        1.0, 64.0, 0.8, 1.0);
+    //loading_screen.light_manager.add_directional_light("Sun_Loading", e_light::Light_Directional::new(Vector3::new(0.0, 1.0, 0.0),
+    //                                    Vector3::new(1.0, 0.95, 0.95), 3.0));
+
+    loading_screen.model_manager.import_model_assimp("Mat", "data/Loading_Screen_Text.fbx", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut loading_screen.material_manager.get_material("Text_mat"),
+                                g_object::MaterialType::OPAQUE,
+                                &loading_screen.light_manager);
+
+    loading_screen.camera.set_frustum_planes(0.1, 500.0);
+
+    //Render_Loading_Screen
+    renderer.render(&mut encoder, &loading_screen.camera,
+        loading_screen.camera.get_perspective(&settings),
+        &mut loading_screen.light_manager,
+        &mut loading_screen.model_manager);
+    //Send to gpu
+    encoder.flush(&mut device);
+    //Swap
+    window.swap_buffers().unwrap();
+    device.cleanup();
+    }
+
+    //Load first level
     let my_scene = scene_manager.get_scene("MyScene");
     //Set camera options
     my_scene.camera.set_frustum_planes(0.1, 500.0);
-
     //Define opengl behavoir
     gfx::preset::blend::ALPHA;
     gfx::preset::depth::LESS_EQUAL_TEST;
