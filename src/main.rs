@@ -37,7 +37,7 @@ pub type DepthFormat = gfx::format::DepthStencil;
 pub fn main() {
 
     let settings = e_engine_settings::EngineSettings::new().with_name("Test Window").with_light_counts(1, 1, 6)
-    .with_dimensions(1920, 1080);
+    .with_dimensions(1280, 720);
 
     //Init window with settings
     let events_loop = glutin::EventsLoop::new();
@@ -61,8 +61,9 @@ pub fn main() {
     //Create first scene (relative handlers are created in it)
     let mut scene_manager: e_scene_mananger::SceneManger<gfx_device_gl::Resources> = e_scene_mananger::SceneManger::new(&settings);
     scene_manager.add("MyScene", &settings);
-    //Get reference to creted scene
+    scene_manager.add("Wall_Scene", &settings);
 
+    //Get reference to creted scene
     {
     scene_manager.add("LoadingScreen", &settings);
     let loading_screen = scene_manager.get_scene("LoadingScreen");
@@ -94,7 +95,25 @@ pub fn main() {
     window.swap_buffers().unwrap();
     device.cleanup();
     }
+    {
 
+    let mut wall_scene = scene_manager.get_scene("Wall_Scene");
+    wall_scene.light_manager.add_directional_light("Sun_Loading", e_light::Light_Directional::new(Vector3::new(-1.0, -0.2, 1.0),
+                                        Vector3::new(1.0, 0.95, 0.95), 3.0));
+    wall_scene.material_manager.add("Wall_mat",
+                        "/share/Photogrammetry/_FinalModels/Seasons/2017_04_Hood/Wall/Wall.png",
+                        "/share/Photogrammetry/_FinalModels/Seasons/2017_04_Hood/Wall/Wall_s.png",
+                        "/share/Photogrammetry/_FinalModels/Seasons/2017_04_Hood/Wall/Wall_n.png",
+                        0.8, 32.0, 0.1, 1.0);
+    wall_scene.model_manager.import_model_assimp("Wall", "/share/Photogrammetry/_FinalModels/Seasons/2017_04_Hood/Wall/Wall.fbx", &mut factory,
+                                &mut main_color, &mut main_depth,
+                                &mut wall_scene.material_manager.get_material("Wall_mat"),
+                                g_object::MaterialType::OPAQUE,
+                                &wall_scene.light_manager);
+    wall_scene.camera.set_frustum_planes(0.1, 500.0);
+    }
+
+    {
     //Load first level
     let my_scene = scene_manager.get_scene("MyScene");
     //Set camera options
@@ -195,86 +214,75 @@ pub fn main() {
                                 g_object::MaterialType::OPAQUE,
                                 &my_scene.light_manager);
 
-    my_scene.model_manager.get_model("Monky_Monky").add_world_location(cgmath::Vector3::new(0.0, 100.0, 0.0));
+    my_scene.model_manager.get_model("Monky_Monky").add_world_location(cgmath::Vector3::new(0.0, 0.0, 0.0));
     my_scene.model_manager.get_model("Monky_Monky").set_world_scale(cgmath::Vector3::new(1.0, 1.0, 1.0));
-    //model_manager.get_model("Monky_Monky").set_world_rotation(cgmath::Basis3::from_angle_x(cgmath::Rad { s: 45.0 }));
+    my_scene.model_manager.get_model("Monky_Monky").set_world_rotation(Vector3::new(45.0,0.0,0.0));
 
 
     my_scene.model_manager.print_scene();
+    }
 
-
+    scene_manager.set_active("MyScene");
+    //Main Loop for the game
     'main: loop {
+
+        //Rendering
+        {
+        let mut current_scene = scene_manager.get_active();
         //Update time / physics
         time_handler.update();
-
-
         //Breaks main loop if got event from input handler
         if input_handler.process_events(&window, &events_loop) {break 'main};
 
         //Process camera/ updated all camera vectors
-        my_scene.camera.calc_view(&input_handler, &mut time_handler);
+        current_scene.camera.calc_view(&input_handler, &mut time_handler);
 
         let delta_time: f32 = time_handler.delta_time();
 
-
-        //Input processing [extra]
-        {
-            //if M is pressed change shininess
-            if input_handler.keys.M == true {
-                if my_scene.model_manager.get_model("gras_gras").get_active(){
-                    my_scene.model_manager.get_model("gras_gras").set_active(false);
-                }else{
-                    my_scene.model_manager.get_model("gras_gras").set_active(true);
-                }
+        if current_scene.model_manager.is_in_manager("Monky_Monky"){
+            if input_handler.keys.Arrow_Down{
+                current_scene.model_manager.get_model("Monky_Monky").add_world_location(Vector3::new(0.0, -1.0, 0.0));
             }
-            if input_handler.keys.C{
-                my_scene.model_manager.print_scene();
+            if input_handler.keys.Arrow_Up{
+                current_scene.model_manager.get_model("Monky_Monky").add_world_location(Vector3::new(0.0, 1.0, 0.0));
             }
-            if input_handler.keys.Arrow_Down & my_scene.model_manager.is_in_manager("gras_gras"){
-
-                let speed = 10.0 * time_handler.delta_time();
-                my_scene.model_manager.get_model("gras_gras").add_world_location(Vector3::new(0.0, -speed, 0.0));
+            if input_handler.keys.Arrow_Left{
+                current_scene.model_manager.get_model("Monky_Monky").add_world_rotation(Vector3::new(2.0, 2.0, 0.0));
             }
-            if input_handler.keys.Arrow_Up &my_scene. model_manager.is_in_manager("gras_gras"){
-
-                let speed = 10.0 * time_handler.delta_time();
-                my_scene.model_manager.get_model("gras_gras").add_world_location(Vector3::new(0.0, speed, 0.0));
+            if input_handler.keys.Arrow_Right{
+                current_scene.model_manager.get_model("Monky_Monky").add_world_rotation(Vector3::new(-2.0, -2.0, 0.0));
             }
-            if input_handler.keys.Arrow_Left & my_scene.model_manager.is_in_manager("gras_gras"){
-
-                let speed = 10.0 * time_handler.delta_time();
-                my_scene.model_manager.get_model("gras_gras").add_world_location(Vector3::new(-speed, 0.0, 0.0));
+            if input_handler.keys.SHIFT_L{
+                current_scene.model_manager.get_model("Monky_Monky").add_world_scale(Vector3::new(0.1,0.1,0.1));
             }
-            if input_handler.keys.Arrow_Right & my_scene.model_manager.is_in_manager("gras_gras"){
-
-                let speed = 10.0 * time_handler.delta_time();
-                my_scene.model_manager.get_model("gras_gras").add_world_location(Vector3::new(speed, 0.0, 0.0));
+            if input_handler.keys.CTRL_L{
+                current_scene.model_manager.get_model("Monky_Monky").add_world_scale(Vector3::new(-0.1,-0.1,-0.1));
             }
-            if input_handler.keys.Arrow_Down {
-                //light_manager.get_point_light("Point3").unwrap().set_position(Vector3::new(0.0, -150.0, 0.0));
-            }
-
         }
 
 
-        //DO Transform
-        //let proj = cgmath::perspective(cgmath::deg(45.0f32), (dim_x as f32/ dim_y as f32), 0.1, 500.0).into();
-
-        my_scene.light_manager.get_spot_light("Spot").unwrap().set_direction(-my_scene.camera.get_direction());
-        my_scene.light_manager.get_spot_light("Spot").unwrap().set_position(my_scene.camera.get_position());
-
-
-        //Doing rendering in Renderer now
-        //model_manager.render(&mut encoder, &camera, proj, &mut light_manager);
-
-        renderer.render(&mut encoder, &my_scene.camera, my_scene.camera.get_perspective(&settings), &mut my_scene.light_manager, &mut my_scene.model_manager);
+        renderer.render(&mut encoder, &current_scene.camera,
+            current_scene.camera.get_perspective(&settings),
+            &mut current_scene.light_manager,
+            &mut current_scene.model_manager);
         //Send to gpu
         encoder.flush(&mut device);
         //Swap
         window.swap_buffers().unwrap();
         device.cleanup();
+        }
+        //Scene switching
+        {
+            //if M is pressed change shininess
+            if input_handler.keys.M == true {
+                scene_manager.set_active("Wall_Scene");
+            }
+            if input_handler.keys.Arrow_Down {
+                scene_manager.set_active("MyScene");
+            }
 
-        //println!("FPS: {}", 1.0 / time_handler.delta_time());
+        }
+        println!("FPS: {}", 1.0 / time_handler.delta_time());
 
     }
 }

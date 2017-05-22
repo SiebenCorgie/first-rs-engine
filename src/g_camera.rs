@@ -152,7 +152,7 @@ impl CameraTyp for Camera{
     //Calculates the perspective based on the engine and camera settings
     fn get_perspective(&self, engine_settings: &e_engine_settings::EngineSettings) -> [[f32;4]; 4]{
 
-        perspective(deg(self.fov),
+        perspective(Deg(self.fov),
         (engine_settings.width as f32 / engine_settings.height as f32),
         self.near_plane, self.far_plane).into()
     }

@@ -3,6 +3,7 @@ use std::time::{Instant, Duration};
 
 
 pub struct Time {
+    start_time: Instant,
     last_time: Instant,
     delta_time: u32,
 }
@@ -13,7 +14,7 @@ impl Time {
         let last_time = Instant::now();
         let delta_time = 0 as u32;
 
-        Time {last_time: last_time, delta_time: delta_time}
+        Time {start_time: last_time, last_time: last_time, delta_time: delta_time}
     }
 
     pub fn update(&mut self){
@@ -27,4 +28,7 @@ impl Time {
         self.delta_time as f32 / 1_000_000_000.0
     }
 
+    pub fn since_start(&self) -> f32 {
+        self.start_time.elapsed().subsec_nanos() as f32 / 1_000_000_000.0
+    }
 }

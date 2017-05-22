@@ -9,7 +9,6 @@ use e_material_manager;
 use e_lights_manager;
 use e_engine_settings;
 
-
 pub struct Scene<R: gfx::Resources> {
     pub name: String,
     pub camera: g_camera::Camera,
