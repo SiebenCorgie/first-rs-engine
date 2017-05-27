@@ -53,3 +53,4 @@ pub mod t_assimp_importer;
 //gameplay
 pub mod g_camera;
 pub use g_camera::*;
+pub mod g_game;

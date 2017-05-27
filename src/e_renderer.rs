@@ -135,7 +135,8 @@ impl Renderer {
 
                 //Prepare transform
                 let l_transform = {
-                                    Matrix4::from_translation(model.world_location) * (Matrix4::from_angle_x(Rad::from(Deg(model.world_rotation.x))) *
+                                    Matrix4::from_translation(model.world_location) *
+                                    (Matrix4::from_angle_x(Rad::from(Deg(model.world_rotation.x))) *
                                     Matrix4::from_angle_y(Rad::from(Deg(model.world_rotation.y))) *
                                     Matrix4::from_angle_z(Rad::from(Deg(model.world_rotation.z)))) *
                                     Matrix4::from_nonuniform_scale(model.world_scale.x, model.world_scale.y, model.world_scale.z)

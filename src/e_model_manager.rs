@@ -68,47 +68,7 @@ impl<R: gfx::Resources> ModelManager<R> {
                                                             &mut material, material_type.clone(), light_manager));
             }
     }
-    /*
-    //New assimp importer
-    pub fn import_model_assimp<F> (&mut self, name: &str, path: &str,
-                        factory: &mut F,
-                        main_color: &mut gfx::handle::RenderTargetView<R, ColorFormat>,
-                        main_depth: &mut gfx::handle::DepthStencilView<R, DepthFormat>,
-                        mut material: &mut e_material::Material,
-                        material_type: g_object::MaterialType,
-                        light_manager: &e_lights_manager::LightManager)
-        where F: gfx::Factory<R>,
-        {
-            let importer = t_assimp_importer::Importer::new();
 
-
-            let (tx, rx) = mpsc::channel();
-            //Import on another thread
-            thread::spawn(move || {
-                let (mesh_vec, indice_vec, name_vec) = importer.import_mesh(path);
-                //Sending to main thread
-                tx.send(mesh_vec, indice_vec, name_vec).unwrap();
-            });
-
-            let received = rx.try_recv();
-            match received {
-                Ok(mesh_vec, indice_vec, name_vec) => {
-                    println!("Got data!");
-                    //Add each mesh individual
-                    for i in 0..mesh_vec.len(){
-                        let final_name: String = String::from(name) + &"_" + &name_vec[i];
-                        self.add(final_name, g_object::Object::new(factory, main_color, main_depth,
-                                                                    mesh_vec[i].clone(), indice_vec[i].clone(),
-                                                                    &mut material, material_type.clone(), light_manager));
-                    }
-                },
-                Err(msk) => println!("Still waiting: {}", msk),
-            }
-
-
-
-    }
-    */
 
     //Print all objects in the scene
     pub fn print_scene(&self){

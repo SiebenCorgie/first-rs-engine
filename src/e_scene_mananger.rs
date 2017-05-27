@@ -22,10 +22,14 @@ impl<R: gfx::Resources> SceneManger<R> {
         manager
     }
 
-    pub fn add(&mut self, name: &str, engine_setting: &e_engine_settings::EngineSettings)
+    pub fn add_by_name(&mut self, name: &str, engine_setting: &e_engine_settings::EngineSettings)
     {
         let scene_to_add =  e_scene::Scene::new(name, engine_setting);
         self.scenes.insert(String::from(name.clone()), scene_to_add);
+    }
+
+    pub fn add_by_scene(&mut self, name: &str, new_scene: e_scene::Scene<R>){
+        self.scenes.insert(String::from(name), new_scene);
     }
 
     //Returns the scene by name or the default scene if not found
@@ -37,6 +41,15 @@ impl<R: gfx::Resources> SceneManger<R> {
         }else {
             println!("Scene '{}' not found, returning default scene", name);
             self.scenes.get_mut(&String::from("Default_Scene")).unwrap()
+        }
+    }
+
+    //Looks if a scene is in the manager
+    pub fn is_in(&mut self, lookup_name: &str)-> bool{
+        if self.scenes.contains_key(&String::from(lookup_name)){
+            true
+        }else{
+            false
         }
     }
 

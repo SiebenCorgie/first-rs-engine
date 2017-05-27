@@ -101,7 +101,7 @@ gfx_defines!{
         specular: gfx::TextureSampler<[f32; 4]> = "t_Specular",
         normal: gfx::TextureSampler<[f32; 4]> = "t_Normal",
 
-        out_color: gfx::RenderTarget<ColorFormat> = "Target0",
+        out_color: gfx::BlendTarget<ColorFormat> = ("Target0", gfx::state::MASK_ALL, gfx::preset::blend::ALPHA),
         out_depth: gfx::DepthTarget<DepthFormat> =
             gfx::preset::depth::LESS_EQUAL_WRITE,
     }
@@ -253,6 +253,10 @@ impl<R: gfx::Resources> Object <R> {
         self.world_location = Vector3::new(self.world_location.x + add_ammount.x,
                                             self.world_location.y + add_ammount.y,
                                             self.world_location.z + add_ammount.z);
+    }
+
+    pub fn get_world_location(&mut self) -> Vector3<f32>{
+        self.world_location.clone()
     }
 
 
