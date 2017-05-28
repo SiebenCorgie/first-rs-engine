@@ -103,27 +103,33 @@ pub fn main() {
         //Load first level
         let my_scene = scene_manager.get_scene("MyScene");
         //Set camera options
-        my_scene.camera.set_frustum_planes(0.1, 500.0);
+        my_scene.camera.set_frustum_planes(0.1, 2000.0);
 
         //add a default material with some different textures
         my_scene.material_manager.add("standart_material",
                             "data/Textures/fallback_diff.png",
                             "data/Textures/fallback_spec.png",
                             "data/Textures/fallback_nrm.png",
-                            0.1, 64.0, 0.8, 1.0);
+                            0.2, 64.0, 0.8, 1.0);
 
         my_scene.material_manager.add("cube",
                             "data/Textures/Metal_diff.png",
                             "data/Textures/Metal_diff.png",
                             "data/Textures/Metal_nrm.png",
-                            0.1, 64.0, 0.8, 1.0);
+                            0.2, 64.0, 0.8, 1.0);
+
+        my_scene.material_manager.add("congret",
+                            "/share/3DFiles/Scan_Texture/Exterrior/Congred_02/2k/CongredTiles_02_Diff.png",
+                            "/share/3DFiles/Scan_Texture/Exterrior/Congred_02/2k/CongredTiles_02_Rough.png",
+                            "/share/3DFiles/Scan_Texture/Exterrior/Congred_02/2k/CongredTiles_02_Nrm.png",
+                            0.2, 16.0, 0.2, 1.0);
 
         //Add some lights
-        my_scene.light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -0.5, 1.0),
-                                            Vector3::new(1.0, 0.95, 0.95), 3.0));
+        //my_scene.light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -0.5, 1.0),
+        //                                    Vector3::new(1.0, 0.95, 0.95), 3.0));
 
-        //my_scene.light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(2.0, -2.0, 2.0),
-        //                              Vector3::new(1.0, 0.0, 0.0), 1.0, 0.09, 0.032, 1.0));
+        my_scene.light_manager.add_point_light("Point", e_light::Light_Point::new(Vector3::new(2.0, -2.0, 2.0),
+                                      Vector3::new(0.5, 1.0, 0.5), 1.0, 0.0014, 0.000007, 1.0));
 
 
         my_scene.model_manager.import_model_assimp("Cube_L", "data/Game/Bounding_cube.fbx", &mut factory,
@@ -138,6 +144,7 @@ pub fn main() {
                                     &mut my_scene.material_manager.get_material("cube"),
                                     g_object::MaterialType::OPAQUE,
                                     &my_scene.light_manager);
+
         my_scene.model_manager.get_model("Cube_R_Bounding_cube").set_world_location(Vector3::new(80.0, 0.0, 0.0));
 
 
@@ -147,9 +154,15 @@ pub fn main() {
                                     g_object::MaterialType::OPAQUE,
                                     &my_scene.light_manager);
         //PlayArea
-        my_scene.model_manager.import_model_assimp("ball", "data/Game/Area.fbx", &mut factory,
+        my_scene.model_manager.import_model_assimp("PlayArea", "data/Game/Area.fbx", &mut factory,
                                     &mut main_color, &mut main_depth,
                                     &mut my_scene.material_manager.get_material("standart_material"),
+                                    g_object::MaterialType::OPAQUE,
+                                    &my_scene.light_manager);
+
+        my_scene.model_manager.import_model_assimp("PlayArea_out", "data/Game/Area_Out.fbx", &mut factory,
+                                    &mut main_color, &mut main_depth,
+                                    &mut my_scene.material_manager.get_material("congret"),
                                     g_object::MaterialType::OPAQUE,
                                     &my_scene.light_manager);
 
@@ -162,6 +175,7 @@ pub fn main() {
 
     //loading game instance
     let mut game = g_game::Game::new();
+    let side_speed = 10.0;
 
     let mut already_in: bool = false;
     //Main Loop for the game
@@ -181,10 +195,35 @@ pub fn main() {
 
             //Update game
             {
-                //Test for game env
                 let current_scene = scene_manager.get_active();
+
+                let light_loc = current_scene.model_manager.get_model("ball_ball").get_world_location();
+                current_scene.light_manager.get_point_light("Point").unwrap().set_position(Vector3::new(-light_loc.x, -10.0, -light_loc.z));
+
+                //Test for game env
+                let loc_l = current_scene.model_manager.get_model("Cube_L_Bounding_cube").get_world_location().clone();
+                let loc_r = current_scene.model_manager.get_model("Cube_R_Bounding_cube").get_world_location().clone();
+
                 if current_scene.model_manager.is_in_manager("ball_ball"){
-                    game.update(current_scene.model_manager.get_model("ball_ball"), time_handler.delta_time().clone())
+                    game.update(current_scene.model_manager.get_model("ball_ball"), time_handler.delta_time().clone(),
+                            loc_r,
+                            loc_l)
+                }
+
+                //Game Input Handling
+                //L
+                if input_handler.keys.Arrow_Up && current_scene.model_manager.is_in_manager("Cube_L_Bounding_cube"){
+                    game.move_1(current_scene.model_manager.get_model("Cube_L_Bounding_cube"), true, time_handler.delta_time().clone());
+                }
+                if input_handler.keys.Arrow_Down && current_scene.model_manager.is_in_manager("Cube_L_Bounding_cube"){
+                    game.move_1(current_scene.model_manager.get_model("Cube_L_Bounding_cube"), false, time_handler.delta_time().clone());
+                }
+                //R
+                if input_handler.keys.Arrow_Left && current_scene.model_manager.is_in_manager("Cube_R_Bounding_cube"){
+                    game.move_2(current_scene.model_manager.get_model("Cube_R_Bounding_cube"), true, time_handler.delta_time().clone());
+                }
+                if input_handler.keys.Arrow_Right && current_scene.model_manager.is_in_manager("Cube_R_Bounding_cube"){
+                    game.move_2(current_scene.model_manager.get_model("Cube_R_Bounding_cube"), false, time_handler.delta_time().clone());
                 }
             }
 
