@@ -16,7 +16,7 @@ use e_lights_manager;
 
 
 //Defs
-const CLEAR_COLOR: [f32; 4] = [0.05, 0.05, 0.1, 1.0];
+const CLEAR_COLOR: [f32; 4] = [0.7, 0.91, 0.92, 1.0];
 
 
 //Render object
