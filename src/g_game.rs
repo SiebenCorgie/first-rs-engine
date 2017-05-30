@@ -4,6 +4,10 @@ use cgmath::*;
 use gfx;
 use time;
 
+struct Score {
+    left: i32,
+    right: i32,
+}
 
 pub struct Block {
     width: f32,
@@ -30,16 +34,19 @@ pub struct Game {
     block_3: Block,
 
     block_speed: f32,
+
+    score: Score,
 }
 
 impl Game {
     pub fn new () -> Self{
         Game{motion: Motion{x: 40.0, y: 20.0},
-            bounds: Bounds{x: 80.0, y: 80.0, mx: -80.0, my: -80.0},
-            block_1: Block{width: 10.0, length: 80.0},
-            block_2: Block{width: 10.0, length: 80.0},
-            block_3: Block{width: 10.0, length: 80.0},
-            block_speed: 25.0,
+            bounds: Bounds{x: 80.0, y: 100.0, mx: -80.0, my: -100.0},
+            block_1: Block{width: 10.0, length: 60.0},
+            block_2: Block{width: 10.0, length: 60.0},
+            block_3: Block{width: 10.0, length: 60.0},
+            block_speed: 50.0,
+            score: Score{left: 0, right: 0},
         }
     }
 
@@ -57,11 +64,15 @@ impl Game {
             {
                 //Score for left
                 println!("Score for left", );
+                self.score.left = self.score.left + 1;
                 ball.set_world_location(Vector3::new(50.0, 0.0, 0.0));
                 self.motion.x = -40.0;
             }else{
                 //bounce from right side
                 self.motion.x = -1.0 * self.motion.x;
+                //Increasing difficulty
+                self.motion.x = self.motion.x * 1.5;
+                self.motion.y = self.motion.y * 1.5;
             }
         }
 
@@ -71,11 +82,15 @@ impl Game {
             {
                 //Score for left
                 println!("Score for right", );
+                self.score.right = self.score.right + 1;
                 ball.set_world_location(Vector3::new(-50.0, 0.0, 0.0));
                 self.motion.x = 40.0;
             }else{
                 //bounce from right side
                 self.motion.x = -1.0 * self.motion.x;
+                //Increasing difficulty
+                self.motion.x = self.motion.x * 1.5;
+                self.motion.y = self.motion.y * 1.5;
             }
         }
 

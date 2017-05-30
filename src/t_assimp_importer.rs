@@ -27,10 +27,7 @@ impl Importer {
         //might need this importer.flip_uvs(true);
         importer.triangulate(true);
         importer.generate_normals(|x| x.enable = true);
-        //importer.pre_transform_vertices(|x| {
-        //    x.enable = true;
-        //    x.normalize = true;
-        //});
+        importer.flip_uvs(true);
 
         //Import scene with all meshes
         let scene = importer.read_file(path.clone()).unwrap();

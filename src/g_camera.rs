@@ -12,8 +12,12 @@ pub trait CameraTyp {
     fn return_view_matrix(&self) -> [[f32; 4]; 4];
     //Returns the current direction of the camera
     fn get_direction(&self) -> Vector3<f32>;
+    //Set current direction
+    fn set_direction(&mut self, new_direction: Vector3<f32>);
     //Returns Position
     fn get_position(&self) -> Vector3<f32>;
+    //Set current position
+    fn set_position(&mut self, new_pos: Vector3<f32>);
     //Sets Fov on this camera
     fn set_fov(&mut self, new_fov: f32);
     //Sets the far, and near planes of the frustum
@@ -137,13 +141,21 @@ impl CameraTyp for Camera{
         self.cameraFront
     }
 
+    fn set_direction(&mut self, new_direction: Vector3<f32>){
+        self.cameraFront = new_direction.normalize();
+    }
+
     fn get_position(&self) -> Vector3<f32> {
         self.cameraPos
+    }
+    fn set_position(&mut self, new_pos: Vector3<f32>){
+        self.cameraPos = new_pos;
     }
 
     fn set_fov(&mut self, new_fov: f32){
         self.fov = new_fov;
     }
+
     fn set_frustum_planes(&mut self, near: f32, far: f32) {
         self.far_plane = far;
         self.near_plane = near;
