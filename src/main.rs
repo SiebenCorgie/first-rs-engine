@@ -143,11 +143,31 @@ pub fn main() {
                             "data/Game/Textures/Dirt_Spec.png",
                             "data/Game/Textures/Dirt_Nrm.png",
                             0.2, 16.0, 0.3, 1.0);
+
         my_scene.material_manager.add("Gras_Plade",
                             "data/Game/Textures/Pixel_Gras.png",
                             "data/Game/Textures/Pixel_Gras.png",
                             "data/Game/Textures/Dirt_Nrm.png",
-                            0.2, 16.0, 0.3, 1.0);
+                            0.2, 32.0, 0.1, 1.0);
+
+        my_scene.material_manager.add("Top_01",
+                            "data/Game/Textures/Pixel_Gras.png",
+                            "data/Game/Textures/Pixel_Gras.png",
+                            "data/Game/Textures/Low_Nrm.png",
+                            0.2, 32.0, 0.5, 1.0);
+
+        my_scene.material_manager.add("Top_02",
+                            "data/Game/Textures/Trees_Top_02.png",
+                            "data/Game/Textures/Trees_Top_02_Spec.png",
+                            "data/Game/Textures/Low_Nrm.png",
+                            0.2, 16.0, 0.4, 1.0);
+
+        my_scene.material_manager.add("Low",
+                            "data/Game/Textures/Low_Diff.png",
+                            "data/Game/Textures/Trees_Top_02_Spec.png",
+                            "data/Game/Textures/Low_Nrm.png",
+                            0.2, 8.0, 0.1, 1.0);
+
 
         //Add some lights
         my_scene.light_manager.add_directional_light("Sun", e_light::Light_Directional::new(Vector3::new(1.0, -0.5, 1.0),
@@ -212,9 +232,33 @@ pub fn main() {
         my_scene.model_manager.import_model_assimp("Gras_Planes", "data/Game/Gras_Area.fbx", &mut factory,
                                     &mut main_color, &mut main_depth,
                                     &mut my_scene.material_manager.get_material("Gras_Plade"),
-                                    g_object::MaterialType::MASKED,
+                                    g_object::MaterialType::OPAQUE,
                                     &my_scene.light_manager);
-        my_scene.model_manager.get_model("Gras_Planes_Gras_Area").set_active(false);
+
+        my_scene.model_manager.import_model_assimp("Trees_Top_01", "data/Game/Trees_Top_01.fbx", &mut factory,
+                                    &mut main_color, &mut main_depth,
+                                    &mut my_scene.material_manager.get_material("Top_01"),
+                                    g_object::MaterialType::OPAQUE,
+                                    &my_scene.light_manager);
+
+        my_scene.model_manager.import_model_assimp("Trees_Top_02", "data/Game/Trees_Top_02.fbx", &mut factory,
+                                    &mut main_color, &mut main_depth,
+                                    &mut my_scene.material_manager.get_material("Top_02"),
+                                    g_object::MaterialType::OPAQUE,
+                                    &my_scene.light_manager);
+
+        my_scene.model_manager.import_model_assimp("Trees_Low", "data/Game/Trees_Low.fbx", &mut factory,
+                                    &mut main_color, &mut main_depth,
+                                    &mut my_scene.material_manager.get_material("Low"),
+                                    g_object::MaterialType::OPAQUE,
+                                    &my_scene.light_manager);
+
+        //Hideing uneeded stuff
+        my_scene.model_manager.get_model("Area_Gras_Arena_Gras").set_active(false);
+        my_scene.model_manager.get_model("Area_Area").set_active(false);
+        my_scene.model_manager.get_model("Area_Marks_Arena_Marks").set_active(false);
+        my_scene.model_manager.get_model("Field_Field").set_active(false);
+
 
         my_scene.model_manager.print_scene();
         //scene_manager.set_active("MyScene");
@@ -244,7 +288,7 @@ pub fn main() {
 
                 current_scene.camera.calc_view(&input_handler, &mut time_handler);
 
-                if count < 120 {
+                if count < 10 {
                     current_scene.camera.set_direction(Vector3::new(0.0, 0.68, 0.73));
                 }
             }
@@ -253,7 +297,7 @@ pub fn main() {
             {
                 let current_scene = scene_manager.get_active();
 
-                if count < 120 {
+                if count < 10 {
                     current_scene.camera.set_direction(Vector3::new(0.0, 0.68, 0.73));
                     count += 1;
                 }

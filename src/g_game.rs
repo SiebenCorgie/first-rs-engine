@@ -71,8 +71,8 @@ impl Game {
                 //bounce from right side
                 self.motion.x = -1.0 * self.motion.x;
                 //Increasing difficulty
-                self.motion.x = self.motion.x * 1.5;
-                self.motion.y = self.motion.y * 1.5;
+                self.motion.x = self.motion.x * 1.1;
+                self.motion.y = self.motion.y * 1.1;
             }
         }
 
@@ -89,8 +89,8 @@ impl Game {
                 //bounce from right side
                 self.motion.x = -1.0 * self.motion.x;
                 //Increasing difficulty
-                self.motion.x = self.motion.x * 1.5;
-                self.motion.y = self.motion.y * 1.5;
+                self.motion.x = self.motion.x * 1.1;
+                self.motion.y = self.motion.y * 1.1;
             }
         }
 
