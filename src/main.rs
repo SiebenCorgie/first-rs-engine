@@ -301,9 +301,6 @@ pub fn main() {
                     current_scene.camera.set_direction(Vector3::new(0.0, 0.68, 0.73));
                     count += 1;
                 }
-
-                println!("Camera dir{:?}",  current_scene.camera.get_direction());
-
                 let light_loc = current_scene.model_manager.get_model("ball_ball").get_world_location();
                 current_scene.light_manager.get_point_light("Point").unwrap().set_position(Vector3::new(-light_loc.x, -10.0, -light_loc.z));
 
@@ -354,8 +351,5 @@ pub fn main() {
         }
 
         let delta_time: f32 = time_handler.delta_time();
-
-        //println!("FPS: {}", 1.0 / time_handler.delta_time());
-
     }
 }

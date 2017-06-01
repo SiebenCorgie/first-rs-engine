@@ -88,6 +88,16 @@ impl Game {
                 //Increasing difficulty
                 self.motion.x = self.motion.x * 1.1;
                 self.motion.y = self.motion.y * 1.1;
+
+                let thread_b = thread::spawn(||{
+                    // Create a new Sound.
+                    let mut snd = Sound::new("data/Game/Sound/Bong.ogg").unwrap();
+
+                    // Play the Sound
+                    snd.play();
+
+                    while snd.is_playing() {}
+                });
             }
         }
 
@@ -116,6 +126,17 @@ impl Game {
                 //Increasing difficulty
                 self.motion.x = self.motion.x * 1.1;
                 self.motion.y = self.motion.y * 1.1;
+
+                let thread_b = thread::spawn(||{
+                    // Create a new Sound.
+                    let mut snd = Sound::new("data/Game/Sound/Bong.ogg").unwrap();
+
+                    // Play the Sound
+                    snd.play();
+
+                    while snd.is_playing() {}
+                });
+
             }
         }
 
