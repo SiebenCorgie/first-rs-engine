@@ -71,9 +71,9 @@ pub fn main() {
         let loading_screen = scene_manager.get_scene("LoadingScreen");
 
         //Setup_LoadingScreen
-        loading_screen.material_manager.add("Text_mat", "data/Textures/Loading_Screen.png",
-                                            "data/Textures/Loading_Screen.png",
-                                            "data/Textures/Loading_Screen.png",
+        loading_screen.material_manager.add("Text_mat", "data/Textures/fallback_diff.png",
+                                            "data/Textures/fallback_spec.png",
+                                            "data/Textures/fallback_nrm.png",
                                             1.0, 64.0, 0.8, 1.0);
         //loading_screen.light_manager.add_directional_light("Sun_Loading", e_light::Light_Directional::new(Vector3::new(0.0, 1.0, 0.0),
         //                                    Vector3::new(1.0, 0.95, 0.95), 3.0));

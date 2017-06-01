@@ -10,9 +10,13 @@ extern crate gfx_window_glutin;
 extern crate glutin;
 extern crate gfx_device_gl;
 extern crate assimp;
+//Sound
+extern crate ears;
+use ears::{Sound, AudioController};
 
+//gfx
 use gfx::*;
-
+//System
 use std::time::{Instant};
 use std::path::Path;
 
@@ -33,7 +37,7 @@ pub mod e_input;
 pub mod e_engine_settings;
 
 
-//Rendering
+//Renderinga
 pub mod e_light;
 pub mod e_lights_manager;
 pub mod e_material;

@@ -3,6 +3,9 @@ use g_object;
 use cgmath::*;
 use gfx;
 use time;
+use ears::{Sound, AudioController};
+
+use std::thread;
 
 struct Score {
     left: i32,
@@ -62,6 +65,18 @@ impl Game {
             if current_loc.z > block_r.z + (self.block_1.length / 2.0)
                 || current_loc.z < block_r.z - (self.block_1.length / 2.0)
             {
+
+                let thread_l = thread::spawn(||{
+                    // Create a new Sound.
+                    let mut snd = Sound::new("data/Game/Sound/Score_Left.ogg").unwrap();
+
+                    // Play the Sound
+                    snd.play();
+
+                    while snd.is_playing() {}
+                });
+
+
                 //Score for left
                 println!("Score for left", );
                 self.score.left = self.score.left + 1;
@@ -80,6 +95,16 @@ impl Game {
             if current_loc.z > block_l.z + (self.block_2.length / 2.0)
                 || current_loc.z < block_l.z - (self.block_2.length / 2.0)
             {
+                let thread_r = thread::spawn(||{
+                    // Create a new Sound.
+                    let mut snd = Sound::new("data/Game/Sound/Score_Right.ogg").unwrap();
+
+                    // Play the Sound
+                    snd.play();
+
+                    while snd.is_playing() {}
+                });
+
                 //Score for left
                 println!("Score for right", );
                 self.score.right = self.score.right + 1;
