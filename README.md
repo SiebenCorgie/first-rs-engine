@@ -28,3 +28,7 @@ This should download, compile and run the project. At the moment you'll get some
 - ability to load custom textures per material
 
 - Automatic documentation
+
+
+# Note
+Because of several design flaws I could not change the engine to a multithreaded behavior, which is needed for a good content management system. I started a second engine called "Ori-Engine" you can find it here: https://github.com/SiebenCorgie/ori-engine
